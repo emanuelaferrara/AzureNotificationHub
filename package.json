@@ -8,7 +8,8 @@
     "macos": "react-native run-macos",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.81.6",
