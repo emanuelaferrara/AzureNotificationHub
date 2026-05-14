@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Notification } from '../types/Notification';
 import { NotificationItemView } from '../components/NotificationItemView';
+import { View, FlatList } from 'react-native';
+import { useAppTheme } from '../../../theme/useAppTheme';
 
 export const NotificationListScreen: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>();
-
+  const theme = useAppTheme();
   useEffect(() => {
     const _notifications = fetchNotifications();
     setNotifications(_notifications);
   }, [setNotifications]);
 
-  return notifications?.map(notification => {
-    return (
-      <NotificationItemView notification={notification} key={notification.id} />
-    );
-  });
+  return (
+    <View style={{ backgroundColor: theme.background }}>
+      <FlatList
+        data={notifications}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => <NotificationItemView notification={item} />}
+      />
+    </View>
+  );
 };
 
 function fetchNotifications(): Notification[] {
