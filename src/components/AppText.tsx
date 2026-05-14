@@ -6,5 +6,7 @@ type Props = TextProps & {
 };
 
 export function AppText({ variant = 'body', style, ...props }: Props) {
-  return <Text style={[typography[variant], style]} {...props} />;
+  return (
+    <Text allowFontScaling style={[typography[variant], style]} {...props} />
+  );
 }
