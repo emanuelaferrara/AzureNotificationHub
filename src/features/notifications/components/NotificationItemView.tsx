@@ -11,6 +11,7 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
   return (
     <View
       style={[
+        styles.card,
         styles.container,
         {
           backgroundColor: theme.card,
@@ -18,43 +19,48 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
         },
       ]}
     >
-      <View style={styles.headerContainer}>
-        <AppText
-          variant="headline"
-          style={[
-            styles.title,
-            {
-              color: theme.textPrimary,
-            },
-          ]}
-        >
-          {notification.title}
-        </AppText>
+      <View style={styles.trailingIconContainer}>
+        {!notification.read && <NotificationDot />}
+      </View>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <AppText
+            variant="headline"
+            style={[
+              styles.title,
+              {
+                color: theme.textPrimary,
+              },
+            ]}
+          >
+            {notification.title}
+          </AppText>
+
+          <AppText
+            variant="caption"
+            style={[
+              styles.date,
+              {
+                color: theme.textTertiary,
+              },
+            ]}
+          >
+            {notification.createdAt}
+          </AppText>
+        </View>
 
         <AppText
-          variant="caption"
+          variant="body"
           style={[
-            styles.date,
+            styles.body,
             {
-              color: theme.textTertiary,
+              color: theme.textSecondary,
             },
           ]}
         >
-          {notification.createdAt}
+          {notification.body}
         </AppText>
       </View>
-
-      <AppText
-        variant="body"
-        style={[
-          styles.body,
-          {
-            color: theme.textSecondary,
-          },
-        ]}
-      >
-        {notification.body}
-      </AppText>
     </View>
   );
 };
@@ -64,7 +70,7 @@ export type NotificationItemViewProps = {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     borderRadius: 16,
     padding: 16,
     marginHorizontal: 16,
@@ -72,20 +78,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  headerContainer: {
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 12,
+  },
+
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 8,
   },
 
+  content: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+
+  trailingIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+  },
+
   title: {
     flex: 1,
   },
 
-  date: {
-    marginLeft: 12,
-  },
+  date: {},
 
   body: {
     lineHeight: 22,
