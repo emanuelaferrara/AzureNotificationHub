@@ -2572,7 +2572,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-macos/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AsyncStorage: bb9dc624a5f86c3a1eacf4ec9f61e1be04b75e98
   boost: cea1d4f90a3a59537f3deb03ff5656489d7133dd
   DoubleConversion: d31b1eb37f6d6f456530c4fd9124b857d6889cab
   fast_float: 20817c22759af6ac8d4d67e6e059b8b499953656
@@ -2642,9 +2641,8 @@ SPEC CHECKSUMS:
   React-timing: f91e37f2154ef9b25e1ded28326f9998669145f1
   React-utils: 35e85af00d70760e6fda280c78d184da64d89e3d
   ReactAppDependencyProvider: 17d150a60ad301142905427154168f58641e38c4
-  ReactCodegen: 8b4eefc1bbc1b4691070c87fb6593e78856e43aa
+  ReactCodegen: be46d1a798e225512031f2bf2c39fdd706d0c7b2
   ReactCommon: b2b6ff304cf01e1b67d8e9646e34d58320be0964
-  RNGestureHandler: c0ecdcaa97ebd68a82a5185e3e0e1dc341030c93
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 8a0df683a71bee13fe0b9d8b653d1a062ff65b2e
 
