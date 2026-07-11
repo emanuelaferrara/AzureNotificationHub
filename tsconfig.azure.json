@@ -1,5 +1,0 @@
-{
-  "extends": "@react-native/typescript-config",
-  "files": [],
-  "exclude": ["node_modules", "__tests__", ".."]
-}

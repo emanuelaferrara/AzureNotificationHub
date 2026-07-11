@@ -1,41 +1,21 @@
-import * as azdev from './azure';
+import type { NotificationSubscription } from 'azure-devops-node-api/interfaces/NotificationInterfaces';
+import { AzureDevOpsClient } from './AzureDevOpsClient';
 
 const orgUrl = 'https://dev.azure.com/EconomiaRGS1Collection/';
 
+// TODO: token is managed by you — load it from secure config, not source.
 const token = '';
 
-const authHandler = azdev.getPersonalAccessTokenHandler(token);
+const client = new AzureDevOpsClient({ orgUrl, token });
 
-const connection = new azdev.WebApi(orgUrl, authHandler);
-
-const organization = 'EconomiaRGS1Collection';
-const service = '';
-
-export async function getNotifications() {
-  const result = await connection.connect();
-  if (result.authenticatedUser) {
-    console.log({ 'result.authenticatedUser': result.authenticatedUser });
+export async function getNotifications(): Promise<NotificationSubscription[]> {
+  try {
+    const subscriptions = await client.listSubscriptions();
+    console.log('[azure] subscriptions:', subscriptions.length);
+    console.log({ subscriptions });
+    return subscriptions;
+  } catch (error: any) {
+    console.error('[azure] getNotifications failed:', error?.message);
+    return [];
   }
-
-  console.log(result);
-
-  const endpoint = `https://${service}dev.azure.com/${organization}/_apis/notification/subscriptions?api-version=7.2-preview.1`;
-
-  const response = await fetch(endpoint);
-  if (response.ok) {
-    console.log(response.json());
-    return;
-  }
-
-  console.log(response);
-
-  //   try {
-  //     const notificationApi = await connection.getNotificationApi();
-
-  //     const subscriptions = await notificationApi.listSubscriptions();
-
-  //     console.log({ subscriptions });
-  //   } catch (error) {
-  //     console.error('Error fetching notifications:', error);
-  //   }
 }
