@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "macos": "react-native run-macos",
     "lint": "eslint .",
-    "browserify:azure-sdk": "browserify node_modules/azure-devops-node-api/WebApi.js -s AzureDevOps -o src/services/azure.js",
+    "browserify:azure-sdk": "node scripts/build-azure.js",
     "prestart": "npm run browserify:azure-sdk",
     "start": "react-native start",
     "test": "jest",
