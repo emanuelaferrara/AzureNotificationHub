@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/AppText';
 import { Notification } from '../types/Notification';
 import { useAppTheme } from '../../../theme/useAppTheme';
+import { NotificationDot } from './NotificationDot';
 
 export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
   notification,
