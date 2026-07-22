@@ -63,6 +63,9 @@ importers:
       react-native:
         specifier: 0.81.6
         version: 0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4)
+      react-native-mac-notifications:
+        specifier: workspace:*
+        version: link:../../packages/react-native-mac-notifications
       react-native-macos:
         specifier: 0.81.7
         version: 0.81.7(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)
@@ -124,6 +127,18 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
+
+  packages/react-native-mac-notifications:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.25.0
+        version: 7.29.7
+      react:
+        specifier: '*'
+        version: 19.1.4
+      react-native:
+        specifier: '*'
+        version: 0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4)
 
 packages:
 
@@ -5289,7 +5304,7 @@ snapshots:
       nullthrows: 1.1.1
       yargs: 17.7.3
 
-  '@react-native/community-cli-plugin@0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))':
+  '@react-native/community-cli-plugin@0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))':
     dependencies:
       '@react-native/dev-middleware': 0.81.6
       debug: 4.4.3
@@ -5384,6 +5399,15 @@ snapshots:
       nullthrows: 1.1.1
       react: 19.1.4
       react-native: 0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4)
+    optionalDependencies:
+      '@types/react': 19.2.17
+
+  '@react-native/virtualized-lists@0.81.6(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)':
+    dependencies:
+      invariant: 2.2.4
+      nullthrows: 1.1.1
+      react: 19.1.4
+      react-native: 0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4)
     optionalDependencies:
       '@types/react': 19.2.17
 
@@ -8204,7 +8228,7 @@ snapshots:
       '@react-native-macos/virtualized-lists': 0.81.7(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)
       '@react-native/assets-registry': 0.81.6
       '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
-      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
       '@react-native/gradle-plugin': 0.81.6
       '@react-native/js-polyfills': 0.81.6
       '@react-native/normalize-colors': 0.81.6
@@ -8263,11 +8287,58 @@ snapshots:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native/assets-registry': 0.81.6
       '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
-      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
       '@react-native/gradle-plugin': 0.81.6
       '@react-native/js-polyfills': 0.81.6
       '@react-native/normalize-colors': 0.81.6
       '@react-native/virtualized-lists': 0.81.6(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)
+      abort-controller: 3.0.0
+      anser: 1.4.10
+      ansi-regex: 5.0.1
+      babel-jest: 29.7.0(@babel/core@7.29.7)
+      babel-plugin-syntax-hermes-parser: 0.29.1
+      base64-js: 1.5.1
+      commander: 12.1.0
+      flow-enums-runtime: 0.0.6
+      glob: 7.2.3
+      invariant: 2.2.4
+      jest-environment-node: 29.7.0
+      memoize-one: 5.2.1
+      metro-runtime: 0.83.7
+      metro-source-map: 0.83.7
+      nullthrows: 1.1.1
+      pretty-format: 29.7.0
+      promise: 8.3.0
+      react: 19.1.4
+      react-devtools-core: 6.1.5
+      react-refresh: 0.14.2
+      regenerator-runtime: 0.13.11
+      scheduler: 0.26.0
+      semver: 7.8.5
+      stacktrace-parser: 0.1.11
+      whatwg-fetch: 3.6.20
+      ws: 6.2.4
+      yargs: 17.7.3
+    optionalDependencies:
+      '@types/react': 19.2.17
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@react-native-community/cli'
+      - '@react-native/metro-config'
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4):
+    dependencies:
+      '@jest/create-cache-key-function': 29.7.0
+      '@react-native/assets-registry': 0.81.6
+      '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/gradle-plugin': 0.81.6
+      '@react-native/js-polyfills': 0.81.6
+      '@react-native/normalize-colors': 0.81.6
+      '@react-native/virtualized-lists': 0.81.6(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)
       abort-controller: 3.0.0
       anser: 1.4.10
       ansi-regex: 5.0.1
