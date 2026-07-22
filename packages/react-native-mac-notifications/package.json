@@ -1,0 +1,33 @@
+{
+  "name": "react-native-mac-notifications",
+  "version": "0.0.1",
+  "description": "Native macOS system notifications (UNUserNotificationCenter) as a React Native TurboModule",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "macos",
+    "react-native-mac-notifications.podspec",
+    "!**/__tests__"
+  ],
+  "keywords": [
+    "react-native",
+    "react-native-macos",
+    "turbomodule",
+    "notifications",
+    "macos"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.25.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "RNMacNotificationsSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  }
+}
