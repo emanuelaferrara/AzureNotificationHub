@@ -2,12 +2,13 @@ import { StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NotificationListScreen } from './features/notifications/screens/NotificationListScreen';
 import { useEffect } from 'react';
-// import { getNotifications } from './services/azure/AzureService';
+import { setSubscriptions } from './services/azure/AzureService';
 import { notify, requestPermission } from 'react-native-mac-notifications';
 
 export default function App() {
   useEffect(() => {
-    // getNotifications();
+    // Ensure Azure DevOps relay subscriptions exist (idempotent, fire-and-forget).
+    setSubscriptions();
 
     const socket = new WebSocket('ws://localhost:8080');
 

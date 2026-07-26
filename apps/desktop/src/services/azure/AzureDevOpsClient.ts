@@ -1,4 +1,8 @@
-import type { NotificationSubscription } from 'azure-devops-node-api/interfaces/NotificationInterfaces';
+import type {
+  NotificationSubscription,
+  NotificationSubscriptionCreateParameters,
+  NotificationSubscriptionTemplate,
+} from 'azure-devops-node-api/interfaces/NotificationInterfaces';
 
 export type AzureDevOpsClientOptions = {
   /** Organization URL, e.g. 'https://dev.azure.com/MyOrg/' (trailing slash optional). */
@@ -47,6 +51,32 @@ export class AzureDevOpsClient {
     return (await res.json()) as T;
   }
 
+  /** POST a JSON body to an Azure DevOps REST resource and parse the JSON response. */
+  private async postJson<TResponse>(
+    path: string,
+    apiVersion: string,
+    body: unknown,
+  ): Promise<TResponse> {
+    const sep = path.includes('?') ? '&' : '?';
+    const url = `${this.baseUrl}${path}${sep}api-version=${apiVersion}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: this.authHeader,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      throw new Error(
+        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${errBody.slice(0, 200)}`,
+      );
+    }
+    return (await res.json()) as TResponse;
+  }
+
   /** List the notification subscriptions visible to the token's user. */
   async listSubscriptions(): Promise<NotificationSubscription[]> {
     const { value } = await this.getJson<AzureList<NotificationSubscription>>(
@@ -54,6 +84,25 @@ export class AzureDevOpsClient {
       '7.1-preview.1',
     );
     return value;
+  }
+
+  /** List the subscription templates (the catalogue of subscribable event types). */
+  async getSubscriptionTemplates(): Promise<NotificationSubscriptionTemplate[]> {
+    const { value } = await this.getJson<
+      AzureList<NotificationSubscriptionTemplate>
+    >('_apis/notification/subscriptiontemplates', '7.1-preview.1');
+    return value;
+  }
+
+  /** Create a new notification subscription and return the created resource. */
+  async createSubscription(
+    params: NotificationSubscriptionCreateParameters,
+  ): Promise<NotificationSubscription> {
+    return this.postJson<NotificationSubscription>(
+      '_apis/notification/subscriptions',
+      '7.1-preview.1',
+      params,
+    );
   }
 }
 
