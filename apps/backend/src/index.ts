@@ -1,59 +1,23 @@
-import { ImapFlow } from "imapflow";
 import { Configs, SENDER_TO_NOTIFY } from "./config.ts";
+import { MailService } from "./services/MailService.ts";
+import { NotificationService } from "./services/NotificationService.ts";
 
-watchAndFetch().catch(console.error);
+let mailService: MailService;
+let notificationService: NotificationService;
 
-async function watchAndFetch() {
-  const client = new ImapFlow({
-    host: "imap.gmail.com",
-    port: 993,
-    secure: true,
-    auth: {
-      user: Configs.EMAIL,
-      pass: Configs.PASSWORD,
-    },
-    logger: false
-  });
 
-  await client.connect();
-
-  const lock = await client.getMailboxLock("INBOX");
-  try {
-    if (!client.mailbox) {
-      return;
-    }
-
-    let lastCount = client.mailbox.exists;
-    console.log(`Watching INBOX (${lastCount} messages)...`);
-
-    client.on("exists", async (data) => {
-      // We already hold the lock, so we can fetch directly
-      if (data.count > lastCount) {
-        let newMessages = await client.fetchAll(`${lastCount + 1}:*`, {
-          envelope: true,
-        });
-        for (let msg of newMessages) {
-
-            if(msg.envelope?.sender?.at(0)?.address === SENDER_TO_NOTIFY) {
-                console.log(`New RELEVANT: ${msg.envelope?.subject}`);
-            }
-          console.log(`New: ${msg.envelope?.subject}`);
-        }
-        lastCount = data.count;
-      }
-    });
-
-    // Wait until interrupted
-    console.log("WAITING FOR MESSAGES");
-    await new Promise((resolve) => process.on("SIGINT", resolve));
-  } finally {
-    console.log("KILLED");
-    lock.release();
-  }
-
-  console.log("LOGGIN OUT");
-  await client.logout();
+function notify(messages: string[]) {
+  notificationService?.notify(messages);
 }
 
-// import { poll } from "./mail_client.ts";
-// poll();
+function fullDump(notify: (messages: string[]) => void) {
+  console.log("full dump")
+  mailService.fetchAll().then(notify);
+}
+
+notificationService = new NotificationService(fullDump)
+mailService = new MailService(Configs.EMAIL, Configs.PASSWORD, SENDER_TO_NOTIFY, notify);
+
+
+notificationService.init();
+mailService.listen().catch(console.error);

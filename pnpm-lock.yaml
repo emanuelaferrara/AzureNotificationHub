@@ -26,6 +26,9 @@ importers:
       mailparser:
         specifier: ^3.9.14
         version: 3.9.14
+      ws:
+        specifier: ^8.21.1
+        version: 8.21.1
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -42,6 +45,9 @@ importers:
       '@types/node':
         specifier: ^26.1.1
         version: 26.1.1
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1230,6 +1236,9 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -3967,6 +3976,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.21.1:
+    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   y18n@4.0.3:
     resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
 
@@ -5304,7 +5325,7 @@ snapshots:
       nullthrows: 1.1.1
       yargs: 17.7.3
 
-  '@react-native/community-cli-plugin@0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))':
+  '@react-native/community-cli-plugin@0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))':
     dependencies:
       '@react-native/dev-middleware': 0.81.6
       debug: 4.4.3
@@ -5385,9 +5406,7 @@ snapshots:
       metro-runtime: 0.83.7
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.81.6': {}
 
@@ -5588,6 +5607,10 @@ snapshots:
       '@types/node': 26.1.1
 
   '@types/stack-utils@2.0.3': {}
+
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 26.1.1
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -8228,7 +8251,7 @@ snapshots:
       '@react-native-macos/virtualized-lists': 0.81.7(@types/react@19.2.17)(react-native@0.81.6(@babel/core@7.29.7)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.1.4))(react@19.1.4)
       '@react-native/assets-registry': 0.81.6
       '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
-      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
       '@react-native/gradle-plugin': 0.81.6
       '@react-native/js-polyfills': 0.81.6
       '@react-native/normalize-colors': 0.81.6
@@ -8287,7 +8310,7 @@ snapshots:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native/assets-registry': 0.81.6
       '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
-      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
       '@react-native/gradle-plugin': 0.81.6
       '@react-native/js-polyfills': 0.81.6
       '@react-native/normalize-colors': 0.81.6
@@ -8334,7 +8357,7 @@ snapshots:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native/assets-registry': 0.81.6
       '@react-native/codegen': 0.81.6(@babel/core@7.29.7)
-      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0)(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
+      '@react-native/community-cli-plugin': 0.81.6(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.81.6(@babel/core@7.29.7))
       '@react-native/gradle-plugin': 0.81.6
       '@react-native/js-polyfills': 0.81.6
       '@react-native/normalize-colors': 0.81.6
@@ -9073,6 +9096,8 @@ snapshots:
       async-limiter: 1.0.1
 
   ws@7.5.11: {}
+
+  ws@8.21.1: {}
 
   y18n@4.0.3: {}
 
