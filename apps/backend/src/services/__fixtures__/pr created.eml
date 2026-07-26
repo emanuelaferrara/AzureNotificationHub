@@ -1,0 +1,1115 @@
+Received: from SA1PR15MB6398.namprd15.prod.outlook.com (2603:10b6:806:3a2::5)
+ by IA0PR15MB5547.namprd15.prod.outlook.com with HTTPS; Mon, 22 Jun 2026
+ 15:28:48 +0000
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=fail;
+ b=nujLhrV1rcR9HIbCqtqc1E5LVKvTXYQ5+yZ6zjAVAZVRhRBQwo+sIbRuTfceFaOqt9IE5HxQizonI29OM+pSRGOdEQwIx2QS8P7zZgDmxl85Y73eQVBoJxCIqFlXzzAygK47pe5qNYIEtsDXMRc2Cp/eQzabl+hZVMMral+GbZzVo/S4Mf7WURSz+JDL+9gxLJvZdNRR/x17fd+7W8vdeExkXBUnAV5PzN7NQUsHfjwiI4DfwVQWbX/XeaPjis1OQdjRR1WkFFHvmbxMERjxXpXKPKbCnesPgl+wANKFdIDIn6sw/8232dcsHfO/xtT7/8ztsGL8M1+jAyoPMpROxQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T3N4smDi4zIJbYi17jMfVTS+lADLyppNeye8aOVpAm4=;
+ b=EbMB1Q3STiqxD7dr8SUutSfBKnIbx6I+kOLOw0B8hQC/pLayZXWYSuIYI3V6e5kEPP+pKkjWwRLOT9dl14w8NhRq7349OSS/eKIJW/WpcBIT40bNeGycbpt0QcJMCF970Bf1UcHMICsPTXSJUqx1HljFvoDXNMSb/0RzasW46dTaYCHzf6Cd+41Mr7VbAon8NwQ2I0cRUwEgbayu7YwuXJ6/YINsiKLCWlKs1vcrmH/61+VylZ5ETq6XXlNv3OSHJ2cFbo9hI2QvAKKt9xFJv9pAc7AA6uG3l3PDPwwfv9yZGI118F1neDjk4dMbAMCY7YeiWKje0zOSJqc2MTQZ9w==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 205.220.161.114) smtp.rcpttodomain=ibm.com smtp.mailfrom=microsoft.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=microsoft.com; dkim=fail (signature did not verify)
+ header.d=microsoft.com; arc=fail (47)
+Received: from CY5PR19CA0009.namprd19.prod.outlook.com (2603:10b6:930:15::6)
+ by SA1PR15MB6398.namprd15.prod.outlook.com (2603:10b6:806:3a2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Mon, 22 Jun
+ 2026 15:28:44 +0000
+Received: from CY4PEPF0000EDD7.namprd03.prod.outlook.com
+ (2603:10b6:930:15:cafe::1b) by CY5PR19CA0009.outlook.office365.com
+ (2603:10b6:930:15::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.20 via Frontend Transport; Mon,
+ 22 Jun 2026 15:28:42 +0000
+Authentication-Results: spf=fail (sender IP is 205.220.161.114)
+ smtp.mailfrom=microsoft.com; dkim=fail (signature did not verify)
+ header.d=microsoft.com;dmarc=fail action=oreject
+ header.from=microsoft.com;compauth=none reason=451
+Received-SPF: Fail (protection.outlook.com: domain of microsoft.com does not
+ designate 205.220.161.114 as permitted sender)
+ receiver=protection.outlook.com; client-ip=205.220.161.114;
+ helo=mx0a-001b2d05.pphosted.com;
+Received: from mx0a-001b2d05.pphosted.com (205.220.161.114) by
+ CY4PEPF0000EDD7.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.159.10
+ via Frontend Transport; Mon, 22 Jun 2026 15:28:42 +0000
+Received: from pps.filterd (m0373555.ppops.net [127.0.0.1])
+	by mx0a-001b2d05.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65MFLfc63121055
+	for <Marco.Daniele-CIC@ibm.com>; Mon, 22 Jun 2026 15:28:41 GMT
+Authentication-Results-Original: ppops.net;	spf=pass
+ smtp.mailfrom=azuredevops@microsoft.com;	dkim=pass header.s=s1024
+ header.d=microsoft.com
+Received: from bl0pr03cu003.outbound.protection.outlook.com (mail-eastusazacs10202087.outbound.protection.outlook.com [40.93.2.87])
+	by mx0a-001b2d05.pphosted.com (PPS) with ESMTPS id 4ey62ad9fa-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 22 Jun 2026 15:28:40 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dz9H+DIYf/cPkfUezAWo/N1SBD9sSuiGRu8ko26Hm9lTaJZ3tC0QdU6xw7rOSYVaWunpkPKHJqdZipNSaaZQlSL3KpRAjWYL+SxHeUz7qCFwr/v6pU7YsZREAFPcFqKDkfjNqkP/TwBHnQMongY6CwLPdEW+6/iPajeR5hRxFr/dc5ytL4s0+8ALhkhMBI0ubO7wC/vFjk0Hw5V20fsE/KHSti0nxyf5/J8hU/KPFIMaLYT+fmcWd+Rg4F6PzNanhbDWL0OiAqdDUK820qnlGQLU712XJA8uiOMFqCJMQpQziWR2Wi3H+gX36ncMqek2Glzv0oIk/WYYO0azIY/kMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xi52/orxpIsha4uA369uHu+8fopmh6RzYn9enHdV1gI=;
+ b=tGiuN8DjpNnSYtMX+MR0gWYtgvCq4mz8aRmRklI3skV6zM4waONUdrRZnSG0c6HkbdBR5dWnjoT2eOSzu1eb8PcBXcAyP4YFyXNrwJL9q+mdC3hCrqaWPe76v9LFns1kdJb54ALDzg5G4j33S9pWnO4KKzFFfDBw/KCF+Xo/KwzM/PBUh3n8tIHE6rxjslyyN40r9yaRmWrpGxhlDg6igfQfEUtUEmqh1CHdcz0hzH1/s2y8YQivtMDEouIuivufOVux+tP+R6jO3n/QkcIevrkiQJZfBnfsTfe9LOba2zC5Ifu0eMrSjObQQg82tLD0INQsb3OyTcJiOoG64BJT4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from substrate.office.com (2603:10b6:408:208::11) by
+ LV8P220MB1736.NAMP220.PROD.OUTLOOK.COM with HTTP via
+ BL1PR13CA0168.NAMPRD13.PROD.OUTLOOK.COM; Mon, 22 Jun 2026 15:28:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; d=microsoft.com; s=s1024;
+	c=relaxed/relaxed; t=1782142118; h=from:to:cc:subject:date:messageid;
+	bh=xi52/orxpIsha4uA369uHu+8fopmh6RzYn9enHdV1gI=;
+	b=qOYj11+NRZcHApF9uMNc9LDvJwhf9cYMjm8AlqUvEj8DuBH8lkcHZOIq4dFt6IHBAkeRvks08du
+	eSbKTGR2nKeJXrV+nyKvDbW1xPO6t5+fTzrq37btPXgVEPoHrcK8dDwTpDALcjmgQXBZ13FGMR00d
+	Y6Ecn34Lb/93h02gryk=
+From: Azure DevOps <azuredevops@microsoft.com>
+To: Armando.Ariemma-CIC@ibm.com, Francesco.DAuria-CIC@ibm.com,
+        Marco.Daniele-CIC@ibm.com, alessandro.longo-cic@ibm.com,
+        MRNGPP87P21H096M@sogeiesterni.it
+Date: Mon, 22 Jun 2026 15:28:38 +0000
+Message-ID: <[02dd7ce834b34acdbd14093796c00fe6-JFZGS42DN5WW25LONFRWC5DJN5XFA3DBORTG64TNFVIHE33EFVBEYMSQPRAXU5LSMVCGK5SPOBZXYRLNMFUWY7CFPBXVG3LUOA======@microsoft.com]>
+In-Reply-To: <Tfs.PullRequest.UIKIT_RGS.verso-core-kit.5816@dev.azure.com>
+References: <Tfs.PullRequest.UIKIT_RGS.verso-core-kit.5816@dev.azure.com>
+Thread-Index: Ad0CW8sEv2hB/0FIBJn40XDKlq+K2A==
+X-VSS-Scope: EconomiaRGS1Collection/UIKIT_RGS/verso-core-kit
+X-VSS-Event-Type: ms.vss-code.git-pullrequest-event
+X-VSS-Subscription-ID: ms.vss-code.pull-request-updated-subscription
+X-VSS-Event-Initiator: D'ANGIOLO RENATO
+X-VSS-Event-Initiator-Ascii: D'ANGIOLO RENATO
+X-VSS-Event-Trigger: PullRequestCreatedNotification
+X-MS-Iris-MetaData: =?utf-8?q?{=22Type=22=3Anull=2C=22Fields=22=3A{=22InstanceID=22=3A=2202dd7ce8-34b3-4acd-bd14-?=
+ =?utf-8?q?093796c00fe6=22=2C=22ActivityID=22=3A=2245fa4895-6a77-4df3-a031-786339a54?=
+ =?utf-8?q?d3a=22}}?=
+X-TsbHttpDeliveryResponseType: Success
+client-request-id: 02dd7ce8-34b3-4acd-bd14-093796c00fe6
+request-id: 02dd7ce8-34b3-4acd-bd14-093796c00fe6
+X-MS-TrafficTypeDiagnostic: LV8P220MB1736:EE_ICP|CY4PEPF0000EDD7:EE_|SA1PR15MB6398:EE_|IA0PR15MB5547:EE_
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|61400799027|7149299003|376014|3109299003|7049299003|4022899009|69100299015|13003099007|19003699004|22082099003|18002099003|16102099003|8096899003|56012099006|3122999024|15920700032;
+X-Microsoft-Antispam-Message-Info-Original: +MlfFmf3RH4i8WEhnV1BmNqsImrjL1nDYrrR77/WoKxXQaq0/WUyTC+429/XKidPSwADKasDz/5H6XLmiC0DhPxFYERuXd8Sh6j4IEAm7yRy85sp6oUZ6Zjc3LM1xsfJRHqdM8EukFu/xs74+6sKVstmMnda0Zq1INKjvhnsg/phpEfW1QzDZ2Gci/rzo0ERzXNx+508lMWalfQdd7vH+FD7lkj4g4hC6kukYPbD+0t4AkbzyOr90LbYS7AzhQsD3ohIkddAt5LZNpsTXEhJqS2pVV+ydfJS8yG0rwa19GnFUsTfBgq/G4VRWT9o0i9IBahEvxRdqWjVQD6TciB0PVxGeGtBsx1bgR/55RO/7z83wD8K2dLhe10sClM1+g45x1drgMT9vGeDLuOf/sqmzGG3z9GFY8QeZfJVllzVbs5JbAwLjtezj8PJ650rXkFcQOxnp0PtIkrscF1/ltdYwH0KE4Yvyd9KzGwYtZq9ots4UHeBc+wG4P1ayDHml5/BQLb9bqYDOgGdNrOpiQHHkR0AB/tUa4TlwMu/D0qh9ZF0Y2cDExFzkEVqffcdIlze1mflcLmi/MB1yTGSfcJ+7CK+T3P8k9Octi3MbfTv6+Zb9cSmdXrrpN4rrmedbTJB
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:it;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:;PTR:;CAT:NONE;SFS:(13230040)(61400799027)(7149299003)(376014)(3109299003)(7049299003)(4022899009)(69100299015)(13003099007)(19003699004)(22082099003)(18002099003)(16102099003)(8096899003)(56012099006)(3122999024)(15920700032);DIR:OUT;SFP:1020;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8P220MB1736
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: tUaW1PcXrn0TAY8oSES7hFBJKIX5tcqB
+X-CLX-Response: 1TFkXGRIfEQpMehcfGR0RCllEF2J6YwUeYWNTBUhzEQpYWBdlbFoTGkVPWWh
+ hTBEKeE4XbWMYY0MbWHwcTHoRCnlMF2RCSxIaWXMaeH0cEQpDSBcHGxITEQpDWRcHGxoTEQpDSR
+ caBBoaGhEKWU0XZ2ZyEQpZSRcacRoQGncGGRwfcRgYGhMfHxAeEncGGBoGGhEKWV4XbGx5EQpJR
+ hdDSEd1GXVCRVleT04RCklHF3hPTREKQ04XXn9LfRt6SXJYRBp+a3MSRXlveR1CbGhgYWNyH15J
+ W2gRClhcFx8EGgQeGBoFGxoEGxsaBBsZHgQZHhAbHhofGhEKXlkXQkhcRm4RCk1cFxwSHhEKTFo
+ XaGlNTU0RCkxGF29ra2xraxEKQk8XY3MZE3lrc2B7cHARCkNaFx4aBBMZBBgEEh0RCkJeFxsRCk
+ RYFx4RCkReFx8RCkJcFxsRCl5OFxsRCkJLF21jGGNDG1h8HEx6EQpCSRdtYxhjQxtYfBxMehEKQ
+ kUXY24BYVMSE0ccRkkRCkJOF21jGGNDG1h8HEx6EQpCTBdlbFoTGkVPWWhhTBEKQmwXY1hYc3hS
+ ZxgSQVoRCkJAF2NhSHp4UmVlBXoFEQpaWBcbEhEKeUMXZW9MHmt4S31YHRIRCllLFxsYEhkfEQp
+ waBdhE39iW14beRlJfxAbHBoRCnBoF20FUFNgHFIFc2xhEBsdGxEKcGgXen1fG31GaUl5SUUQGh
+ EKcGgXekl7R3tPRW9kWhoQGBoeEQpwaBdma0wTcnlJZH0ScBAaEQpwaBdnTk5EHmJ6ThNHeRAaE
+ QpwaBdmUnBbe3JYaFhOSRAaEQpwaBdjSF8aQ0FtYV4eeRAaEQpwfRd6BUxZfhlGSVBTQBAYGxIR
+ CnB9F21GXWdvU39rRRpAEBsYEhEKcH0XbBkfenwFH0R/aBIQGhEKcH0XbWlOHEBkX18ZTUgQGx4
+ SEQpwfRdjZkxOWgFDZh1AHhAaEQpwfRdjTxxkZBpuenhGfRAaEQpwfRdte0xaSXxtHHpARBAaEQ
+ pwfRdrQ2xjQB9LaH9TZRAaEQpwfRdpRwFcYF9sRwVGRBAaEQpwfRdpekBka11GT09+XxAbGBsRC
+ nB9F2RSXGVAfnp7H25mEBoRCnB/F2FpRHMaGBgda29YEBsTGREKcF8XbUxaehxdfHNGbHsQGBsS
+ EQpwXxdve3BEaWNeU0ZhTRAbGRoRCnB/F2ZeTlt+e25iU3BcEBIcEQpwXxdmeh9zWERjUhJpQRA
+ aEQpwXxdtZV5CHkZLW1MdQRAbHxsRCnBfF2VoQGhQR3tZaFpiEBoRCnB/F2JGa0ESGgUFS2dFEB
+ sbGxEKcF8XYBhFSFpYbRodbWQQGxgbEQpwXxduBUJ/c0dLH0RaZxAbGx4RCnBsF2tlWkh8ZHpDb
+ X5lEBsZExEKbX4XGhEKWE0XSxEg
+X-Proofpoint-GUID: tUaW1PcXrn0TAY8oSES7hFBJKIX5tcqB
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIyMDE1MyBTYWx0ZWRfX4aDR4O/ZmY80
+ NA/7R+61NK1LEASBoCzG0ZZuiAiVA/ocXddxFUPP4wgcIntaCIfU99WNftrF08w+sqc69lv0O1O
+ pS4cmz4CktZ7vVHEj1tqIgGKbjOIe8w=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIyMDE1MyBTYWx0ZWRfX6va1xcH9PHb6
+ YwQmabCAEGb/Tfis4vYuO1jkh+gl9RHVqn3GmN9lvybxa+49w5L6DcHHG5wzlJEpmmEewob0HoU
+ 3cQoxfnNncfHiQLvLFfdJJOqal0x0joZoEHBV8P1Mlh1RCy+jwzTWYB7gia1EHLaQJ1aAyNNJmL
+ jg/kJ1BWn9G5LhdVaO3Vm3rb5qbcClt/yXv2iQAUQUpASU3XHoILwncnz6mqkjWNh9jnb2+XmEC
+ Y1CgmOx6Qi/6ov45dIe3KxDa6NzuMTbWfKwNS0KlEcigoBE1o4IF2eWChG136KKolm5diW9myQx
+ qdRT6MVEtVl79eBoLPcXDQAcfm4/oPNGlu3fXJtsGm/ciSktoBhMjFuuvyvq/2xPi7j0TXlVY86
+ DTdWjtFAjA8x+07cV86cHOI3j/YVO0xq2Okhx/RfjFWaKFbo3+1zEtYiRwWSSx0cNyWrKBALd2r
+ lME+u0t1t2vo1krSj/nLTnyhjQ4OdIk1N3IuVnkeg0efZqXkhAXrBfB1xsWxQ
+X-Authority-Analysis: v=2.4 cv=JuPBas4C c=1 sm=1 tr=0 ts=6a3954a8 cx=c_pps
+ a=ekAiH+xURIvttvBQTj2sSw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=I3jg87b94x0A:10
+ a=Kan8h273Bse8B8Jy5C1n:22 a=Tf50yhtgai_kYZK-W9C0:22 a=6ngU9CQ13eVzCNsBmngZ:22
+ a=OHN5U4vuAAAA:8 a=5p_tG3gqAAAA:8 a=yMhMjlubAAAA:8 a=TeuQqM9sAAAA:8
+ a=4gitk6w3qJxVERgUGOYA:9 a=LnSG_txsGfMm6uYb:21 a=_W_S_7VecoQA:10
+ a=L03L2QfmqWoA:10 a=1WNtSb5ECZgA:10 a=QEXdDO2ut3YA:10
+ a=heGRQxoA43GsKyjqKIUo:22
+X-CLX-Shades: MLX
+X-Proofpoint-Banner-Trigger: inbound
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Subject: [EXTERNAL] PR - feat(core/toolbar/teamrgs/110378/public): Razio... -
+ verso-core-kit 5816 (D'ANGIOLO RENATO)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-22_02,2026-06-22_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=inbound_notspam policy=inbound score=0
+ priorityscore=537 adultscore=0 spamscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 bulkscore=0 clxscore=385 suspectscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=inbound adjust=0
+ reason=mlx scancount=2 engine=8.22.0-2606150000 definitions=main-2606220153
+ domainage_hfrom=12835
+Return-Path: azuredevops@microsoft.com
+X-MS-Exchange-Organization-ExpirationStartTime: 22 Jun 2026 15:28:42.6353
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Exchange-Organization-Network-Message-Id: 83ff3cbc-ec60-4b35-627d-08ded072f14c
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: fcf67057-50c9-4ad4-98f3-ffca64add9e9:0
+X-MS-Exchange-Organization-MessageDirectionality: Incoming
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: CY4PEPF0000EDD7.namprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Exchange-Organization-AuthSource: CY4PEPF0000EDD7.namprd03.prod.outlook.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Office365-Filtering-Correlation-Id: 83ff3cbc-ec60-4b35-627d-08ded072f14c
+X-MS-Exchange-Organization-SCL: -1
+X-Microsoft-Antispam: BCL:0;ARA:13230040|6062899009|7049299003|5082899009|3109299003|82310400026|12012899012|69100299015|4022899009|4092899012|5062899012|7149299003|2092899012|13102899012|13012899012|3092899012|3072899012|3122999024|13003099007|16102099003|22082099003|57112099003|19002099009|18003699003|5063699009|11063799006|8096899003;
+X-Forefront-Antispam-Report: CIP:205.220.161.114;CTRY:US;LANG:en;SCL:-1;SRV:;IPV:NLI;SFV:NSPM;H:mx0a-001b2d05.pphosted.com;PTR:mx0a-001b2d05.pphosted.com;CAT:NONE;SFS:(13230040)(6062899009)(7049299003)(5082899009)(3109299003)(82310400026)(12012899012)(69100299015)(4022899009)(4092899012)(5062899012)(7149299003)(2092899012)(13102899012)(13012899012)(3092899012)(3072899012)(3122999024)(13003099007)(16102099003)(22082099003)(57112099003)(19002099009)(18003699003)(5063699009)(11063799006)(8096899003);DIR:INB;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2026 15:28:42.4885
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83ff3cbc-ec60-4b35-627d-08ded072f14c
+X-MS-Exchange-CrossTenant-Id: fcf67057-50c9-4ad4-98f3-ffca64add9e9
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EDD7.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR15MB6398
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:06.0931718
+X-MS-Exchange-Processed-By-BccFoldering: 15.21.0139.008
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:1;jmr:0;auth:0;dest:C;OFR:CustomRules;ENG:(910005)(944490095)(944506478)(944626604)(920097)(930201)(20251009189)(140003);
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?K3pWZEovUmVZZ05Ibm52OThEV3NmNFdBRCthdDkzYXZCRHNlWTNRaFJnY3Jp?=
+ =?utf-8?B?TjdMNXVmWndGWno1ajVYK0lvWXpIR28rUlRTZTFnUVFIMDVROEc2MUFRY0F4?=
+ =?utf-8?B?UGxVWlRzblpBdEoreVVNYnU3WE1DSHFSTVlJZ3FpNlRCQTZoeUdFUGFCczM3?=
+ =?utf-8?B?cmpwaW1yNnRmWGcvc1Z6RFpoREMzenllSG8vRmJwTXRLaER0TE11amExM3dR?=
+ =?utf-8?B?NWp6WitmUFJ5WEZJdm5MbG55UTJzN1VYL2tEaS9MdHE3YkF0M1J0czR5dGZN?=
+ =?utf-8?B?VkVjQnM0UnZ0QmhBelVTdTRDR25sUzVCVFpzaG9QYUd1Q2ZtVUNjSytWMVBm?=
+ =?utf-8?B?UXBBdFBvbnBaUkNqdjBscU5DS2xUUDRsWDd2LzJQTEw2dGprM0F0REkrMUkv?=
+ =?utf-8?B?MGdPZnQ3VSs2SzVjeEVjMmlHWC9VN3NobTZVLzRyeE5VY0M4OTJ5VEtPRFU2?=
+ =?utf-8?B?NzBBWkJNTk03SytUOVdybTRvUW8zaXBKNnZKQ2E2R0xqMVpHejNGaG04ZXNE?=
+ =?utf-8?B?V1JhVUQ4K2lvcHNwR3BSeTJ0QUhTTnBYNEJ1S0tHcC9zVElwMDBReHBoNlFW?=
+ =?utf-8?B?YVJLNW5aRnUwa3NKRnFCVDBuNkFjWXRsVmZUc2YzdDFXd0NWSWlwTEtkYlJH?=
+ =?utf-8?B?UVdYKzZITXFqM3hZdng3UFM0Q0pJaGxEck5RT2xNZ243NGoyWjRGbFRGcWdt?=
+ =?utf-8?B?UlhXV0FiWHBlSlpCTlhsM1pLeGphZXdPZHhQYVBxOVMrd1Q3WHdGMitrK3V0?=
+ =?utf-8?B?OGZ5UjMrTjVlZ3Z3QVFGbFBpSXZxNXFBYkc1aWU0djFtMGVtalEzUXFUT0pL?=
+ =?utf-8?B?d2wrdE0vb05jb0RyVTNLZ3Q4NEE0UlVLQ2Z4elVGc25PaldQSmNxdUU1aGRP?=
+ =?utf-8?B?YU9NSmJIY2hKZjVEeVNFQ1AybXVob05tUXc5RXBtQkttTTM2NnpzN0hhcUUx?=
+ =?utf-8?B?cGs2MDVFRjd5NlNSbHVORHhhOGp2QmltZU1ERFhLYXoxOC9vcGpNRjJVUzN2?=
+ =?utf-8?B?QXA0UzdYWk1aK09IYUxYbFhwUFBJaFVuZFd1ekhtc2x3bmhxSGlSTnJyY3pF?=
+ =?utf-8?B?dEM4a3ZjUk5QemRJb2VZMUIyK2JUcTA5VUJONnhQN0JGak9ybFp3T0xudlVx?=
+ =?utf-8?B?TE91bFNsUEwyMjZRd3ArMjFlZE9SbWxDd2JFOXMrTW5jVzJSMkgrS3dwazA2?=
+ =?utf-8?B?bWx5SGVBTjV1MWdHVURKZVhIbjZWT0tQWitMOW4vYS9HTHd0YTJ3SHZPR0E3?=
+ =?utf-8?B?dHcxTElWZnRicXBScnRDOC8wcDBoSE1Ham9LTTFkOGl2SndvcXNlL3BjY1RE?=
+ =?utf-8?B?ZmU2Mlh1bDFoMHFrdW5KRWdmaW94UmdoMktQcS9ZSGh0M2lNTW1tb2hRUGt0?=
+ =?utf-8?B?R2dyR0dpWXRuSnBwZWxTOHB4Q0ZFTTVXc1BsdUowVFJhREF4b1kxdUk3czM5?=
+ =?utf-8?B?K2cvQjlCMXBhYWM2UE5rc3Uwa1h6d3kvUi96SC9ZeG1VZ1BWc3Q1YnFVbllm?=
+ =?utf-8?B?TEZNK3pGTm90cFV2YjViT3NUWjZMN1AvNjZmQnNWUUd1V3lsUG4vQURsMmI2?=
+ =?utf-8?B?bWQvYnpOZHpDTnM4K1owTGtxN1JuN1BiNEN1dXcwNjVadlVCUGxmcGhQeXZE?=
+ =?utf-8?B?WVpPWXhwWkdiWGNoRmZacTRpMjVQNDZGTEFJRldhbWZHR282NFpWSW1nOFQ2?=
+ =?utf-8?B?dE1wNm9xQ2l0VXlxRHhxSms2MWlMM3NKU2JpTlNTZTNqWU1MYWFoREJnRXor?=
+ =?utf-8?B?a2hQUHZnM0VGd2tIUTc3cSttTGhVSWJ3YXhKQkY0M1hwcjY5OGJuNXhMejBo?=
+ =?utf-8?B?N3BkQnByK2hEbGEvTys3WmNueit6SnVPQW1SbUpoZkNKajBKMW1lNTVEeTVt?=
+ =?utf-8?B?eTN3N2VQKzRId3pLVUNlTzRObnFxcDJGN3RLMWVBNW40bUlBK2Y5RGhCUk1q?=
+ =?utf-8?B?ZE9mZkVZRHBHdjYxcTBMVkNCWDF4U1Z1TTBkdm43cWRpUGZXUUo5N3E4ZFB3?=
+ =?utf-8?B?c2YzclJ3MUw0bFlDOWp2RElkR2ZPZTJyTVlpNmlxTTJ6eTZHNTluQURvOVJZ?=
+ =?utf-8?B?Rk85ZnRCTUpyektLcmxrbTNaS3dTTDFQd21oamVjclB2azVONWxVS2RyR3Rn?=
+ =?utf-8?B?azZiRHhidnFjRmJBSUUzdWRJZGwyb3Z6bE5aRU1vRUFPTFZ0dzg5Y3pRRlNj?=
+ =?utf-8?B?QWhieG9halVZSHRZT3ZxcnBvSFpSZGEwbUVUZzh5a0dsVFhvWWJUeEJvZTBp?=
+ =?utf-8?B?eDV0NUR1djNyYzUvQlg4aWFtVWtHNkc5b3hXc0NHbDgxcXZmS0hBelZ2KzNR?=
+ =?utf-8?B?WXBLMFJqQy9jRk9qTmlqM2RaWWd1YzFaKzd3VjR1MmNuUVpKSUdPV2hsSWJU?=
+ =?utf-8?B?eEhJYWJzbmd5dDlPL05KZGl4NHZvU2VJTnVzN3V0aHBEa0R6R256Z2FINnNW?=
+ =?utf-8?B?RjdqZnFGb3pWRDhJeDVaWEwyWjQwblZFU280dzd4M2xyOVJJOTNuSVQ2eFFo?=
+ =?utf-8?B?ZGc3UXJNcTRydXd4dkdIWExVcnRaR2dGRU5OdElhZkorb1NPRXI4Y2FtZ0Jk?=
+ =?utf-8?B?NWsxdWlQZVIxOGRLcXViYnZlZ2loUXZVUmtINklZcjllb3IyUkJlcTZQZ2pQ?=
+ =?utf-8?B?bEp2THFmelFNeE5lcGtZV2Z2SHhySFQrcE1uZHlGZ2h4UUp6V3hzNGFPRTNn?=
+ =?utf-8?B?aDBFZnE2RFdlbnNPTzhRUWE2aExucFJJOWtkbm0wMXdRSUFPWFRNREFUcmRW?=
+ =?utf-8?B?MlUwN1ljb3p3NTB4Mkphbk1UdENjVkpDWUFTZ1FlREorVmxGcy9paWZ6WGdo?=
+ =?utf-8?B?ZXRodUhQOUo5R3NmN1BUUDB1UVFCWS9OY2ZyQlloclo4NjBmbGVybXFZMHRl?=
+ =?utf-8?B?WVNHNExYY2NkNXdNVXVUZVRVUS96NzY1ZjNKRmtKMVN4ZWRaRFBucG1icEky?=
+ =?utf-8?B?R29zWStUQ3RTOUtiNEhoRzhGT2xsNWdFYmVha201QjQzOG51SFF3blNmUERU?=
+ =?utf-8?B?Y3RSVmFXWVNnclVuOEN1MG9WWHFYR2Q2TDM3dWdKQUQzeTNzM0xxQVFhYmhW?=
+ =?utf-8?B?M3FWSWZHdzV2MnBlUDBZdE5KcWc2bFZwTElHMS9FZ3lBVXNGb1VlVE0reUEx?=
+ =?utf-8?B?WTV4MDVDVG9ueEo5aTFwazZva1Q5aE5yYVg1Q1V1VWEwRHdsSHUwVCtYTmlL?=
+ =?utf-8?B?Sy95TGVxQnVrbExiWTE0dnhNdFVLVmNJTDVjZXE5a21uenlrTVFxTlVSQm14?=
+ =?utf-8?B?NFNKbGs2ZTlRSnFmazMzYitYL0wwSEoxQ01qR0paMG4wTlFQaG9hN1hWMkRq?=
+ =?utf-8?B?c3ltY2ZlRzdRZGhCS2ZycXNxWFZ5bHhnRCtDUW1jTDROWnRrb0hVUHRvamNq?=
+ =?utf-8?Q?kKGV+ryRuaMur/niXo8hu?=
+MIME-Version: 1.0
+
+<!-- BaNnErBlUrFlE-BoDy-start --><!-- Preheader Text : BEGIN --><meta http-=
+equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8"><div style=3D=
+"display:none !important;display:none;visibility:hidden;mso-hide:all;font-s=
+ize:1px;color:#ffffff;line-height:1px;max-height:0px;opacity:0;overflow:hid=
+den;">
+D'ANGIOLO RENATO created a new pull request Azure DevOps feat(core/toolbar/=
+teamrgs/110378/public): Razioinalizzazione Toolbar D'ANGIOLO RENATO created=
+ a new pull request verso-core-kit feat/110378-razionalizzazione-toolbar-ba=
+r merge into develop</div>
+<!-- Preheader Text : END -->
+
+<!-- Email Banner : BEGIN -->
+<div style=3D"display:none !important;display:none;visibility:hidden;mso-hi=
+de:all;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;opacity:0=
+;overflow:hidden;">ZjQcmQRYFpfptBannerStart</div>
+
+<!--[if ((ie)|(mso))]>
+  <table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"padding: 0px 0px 10px 0px; direction: ltr" lang=3D"en"><tr><td>
+    <table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" style=3D"paddin=
+g: 0px 8px 6px 8px; width: 100%; border-radius:4px; border-top:4px solid #9=
+0a4ae;background-color:#d0d8dc;"><tr><td valign=3D"top">
+      <table align=3D"left" border=3D"0" cellspacing=3D"0" cellpadding=3D"0=
+" style=3D"padding: 0px 8px 4px 8px; font-size: 12px; line-height: 16px">
+	<tr><td style=3D"color:#000000; font-family: 'Arial', sans-serif; font-wei=
+ght:bold; font-size:14px; line-height: 20px; direction: ltr">
+	  This Message Is From an External Sender
+	</td></tr>
+	<tr><td style=3D"color:#000000; font-weight:normal; font-family: 'Arial', =
+sans-serif; font-size:12px; direction: ltr">
+          This message came from outside your organization.
+	</td></tr>
+
+      </table>
+      <![if ie]><br clear=3D"all"><![endif]>
+      <table align=3D"right" border=3D"0" cellspacing=3D"0" cellpadding=3D"=
+0" style=3D"padding: 0px 0px 4px 0px; font-size: 14px; line-height: 36px"><=
+tr>
+	<td style=3D"direction: ltr">&nbsp;&nbsp;<a target=3D"_blank" href=3D"http=
+s://us-phishalarm-ewt.proofpoint.com/EWT/v1/AdhS1Rd-!4pFWElZ42I-Rn1R57m7A8X=
+L0q3y8S26nastLuL8o4I-Jmkm1dZ-4xn5lAJC0atVcF9L1hLw6gcGjG9gRU3gWo9ARTLCG2PGGT=
+3BpmI6QytNKoLK0kHeRqvZ1OP7Sai8yeZJrX2lMDWRw5S7NeybrA8p7GzWDi6bX1ZHjHtCG11PA=
+UlnUI_Y55c1GnAVBXNbTRh2vBxzf5W1yqlrUpG24UTktBCFnD5Djdh2YuIcI8Z-pJu2nMgdM$" =
+style=3D"mso-padding-alt: 7px; padding: 7px; border-radius: 2px; border: 1p=
+x solid #666666; "><strong style=3D"font-weight: normal; color: #000000; te=
+xt-decoration: none; font-family: 'Arial', sans-serif; font-size: 14px;">&n=
+bsp;&nbsp;Report&nbsp;Suspicious&nbsp;&nbsp;</strong></a>&nbsp;&nbsp;&zwnj;=
+ </td>
+      </tr></table>
+    </td></tr></table>
+  </td></tr></table>
+<![endif]-->
+
+<![if !((ie)|(mso))]>
+  <div dir=3D"ltr" lang=3D"en" id=3D"pfptBanners3m6hdw" style=3D"all: rever=
+t !important; display:block !important; text-align: left !important; margin=
+: 0 0 10px 0 !important; padding:7px 16px 8px 16px !important; border-radiu=
+s: 4px !important; min-width: 200px !important; background-color: #d0d8dc !=
+important; background-color: #d0d8dc; border-top: 4px solid #90a4ae !import=
+ant; border-top: 4px solid #90a4ae;">
+    <div id=3D"pfptBanners3m6hdw" style=3D"all: unset !important; float:lef=
+t !important; display:block !important; margin: 1px 0 1px 0 !important; max=
+-width: 600px !important;">
+      <div id=3D"pfptBanners3m6hdw" style=3D"all: unset !important; display=
+:block !important; visibility: visible !important; background-color: #d0d8d=
+c !important; color:#000000 !important; color:#000000; font-family: 'Arial'=
+, sans-serif !important; font-family: 'Arial', sans-serif; font-weight:bold=
+ !important; font-weight:bold; font-size:14px !important; line-height:1.29 =
+!important; line-height:1.29">
+	This Message Is From an External Sender
+      </div>
+      <div id=3D"pfptBanners3m6hdw" style=3D"all: unset !important; display=
+:block !important; visibility: visible !important; background-color: #d0d8d=
+c !important; color:#000000 !important; color:#000000; font-weight:normal; =
+font-family: 'Arial', sans-serif !important; font-family: 'Arial', sans-ser=
+if; font-size:12px !important; line-height:1.5 !important; line-height:1.5;=
+ margin-top:2px !important;">
+This message came from outside your organization.
+      </div>
+
+    </div>
+    <div id=3D"pfptBanners3m6hdw" style=3D"all: unset !important; float: ri=
+ght !important; display: block !important; display: block; margin-left: 16p=
+x !important; margin-top: 1px !important; text-align: right !important; wid=
+th: fit-content !important; font-size: 12px !important">
+<a id=3D"pfptBanners3m6hdw" href=3D"https://us-phishalarm-ewt.proofpoint.co=
+m/EWT/v1/AdhS1Rd-!4pFWElZ42I-Rn1R57m7A8XL0q3y8S26nastLuL8o4I-Jmkm1dZ-4xn5lA=
+JC0atVcF9L1hLw6gcGjG9gRU3gWo9ARTLCG2PGGT3BpmI6QytNKoLK0kHeRqvZ1OP7Sai8yeZJr=
+X2lMDWRw5S7NeybrA8p7GzWDi6bX1ZHjHtCG11PAUlnUI_Y55c1GnAVBXNbTRh2vBxzf5W1yqlr=
+UpG24UTktBCFnD5Djdh2YuIcI8Z-pJu2nMgdM$" style=3D"all: unset !important; dis=
+play: inline-block !important; text-decoration: none">
+    <div class=3D"pfptPrimaryButtons3m6hdw" style=3D"display: inline-block =
+!important; display: inline-block; visibility: visible !important; opacity:=
+ 1 !important; color: #000000 !important; color: #000000; font-family: 'Ari=
+al', sans-serif !important; font-family: 'Arial', sans-serif; font-size: 14=
+px !important;  font-weight: normal !important; text-decoration: none !impo=
+rtant; border-radius: 2px !important; margin-top: 3px !important; margin-bo=
+ttom: 3px !important; margin-left: 16px !important; padding: 7.5px 16px !im=
+portant; white-space: nowrap !important; width: fit-content !important;
+	border: 1px solid #666666">
+	Report&nbsp;Suspicious
+    </div>
+</a>
+    </div>
+    <div style=3D"clear: both !important; display: block !important; visibi=
+lity: hidden !important; line-height: 0 !important; font-size: 0.01px !impo=
+rtant; height: 0px">&nbsp;</div>
+  </div>
+<![endif]>
+
+<div style=3D"display:none !important;display:none;visibility:hidden;mso-hi=
+de:all;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;opacity:0=
+;overflow:hidden;">ZjQcmQRYFpfptBannerEnd</div>
+<!-- Email Banner : END -->
+
+<!-- BaNnErBlUrFlE-BoDy-end -->
+<html>
+<head><!-- BaNnErBlUrFlE-HeAdEr-start -->
+<style>
+  #pfptBanners3m6hdw { all: revert !important; display: block !important;
+    visibility: visible !important; opacity: 1 !important;
+    background-color: #d0d8dc !important;
+    max-width: none !important; max-height: none !important }
+  .pfptPrimaryButtons3m6hdw:hover, .pfptPrimaryButtons3m6hdw:focus {
+    background-color: #b4c1c7 !important; }
+  .pfptPrimaryButtons3m6hdw:active {
+    background-color: #90a4ae !important; }
+  html:root, html:root>body { all: revert !important; display: block !impor=
+tant;
+    visibility: visible !important; opacity: 1 !important; }
+</style>
+
+<!-- BaNnErBlUrFlE-HeAdEr-end -->
+
+
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1"=
+>
+<meta name=3D"ProgId" content=3D"Word.Document">
+<title></title>
+<style>
+    /* Prevent WebKit and Windows mobile changing default text sizes */
+body, table, td, a {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+ /* Remove spacing between tables in Outlook 2007 and up */
+table, td {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+
+/* RESET STYLES */
+img {
+  border: 0;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+  -ms-interpolation-mode: bicubic;
+}
+
+table {
+  border-collapse: collapse !important;
+}
+
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+/* BASE STYLES */
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  background: white;
+}
+
+h1, h2, h3, h4, table, td, th, a, p, span, div, i, em, li, ul, .img-block, =
+img, .comment {
+  font-family: 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'Roboto',=
+ 'Arial', sans-serif;
+}
+
+td {
+  font-size: 14px;
+  line-height: 20px;
+  color: #212121;
+}
+
+a {
+  text-decoration: none;
+  color: #0078D4;
+}
+
+em {
+  font-style: normal;
+  color: #666;
+}
+
+p {
+  margin: 0;
+}
+
+/* Buttons */
+.btn-primary:hover {
+  border-color: #007acc !important;
+}
+.btn-default:hover {
+  border-color: #eaeaea !important;
+}
+.btn-primary:active {
+  border-color: #005faa !important;
+  background: #005faa !important;
+}
+.btn-default:active {
+  border-color: #F0F0F0 !important;
+  background: #F0F0F0 !important;
+}
+
+/* Images */
+.img-block {
+  display: block;
+  color: #ccc;
+  font-size: 10px;
+  max-width: 100%;
+}
+
+.img-padding {
+  padding: 0 20px 0 0;
+}
+
+.comment {
+  color: #333333;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.comment blockquote {
+  color: #666666;
+  border-left: 3px solid #a6a6a6;
+  padding: 1px 0 1px 15px;
+  margin: 12px 0;
+}
+
+.comment-gfx {
+  padding-top: 20px;
+}
+
+.note {
+  font-size: 13px;
+}
+
+/* INFO TABLE */
+.activity-table {
+  display: table;
+}
+
+.active {
+  background: #CEF1DE;font-family: 'Segoe UI', '-apple-system', 'BlinkMacSy=
+stemFont', 'Roboto', 'Arial', sans-serif; font-size: 14px; color: #333333; =
+padding: 2px 4px; display: inline-block;
+}
+
+.inactive {
+  background: #eeeeee;font-family: 'Segoe UI', '-apple-system', 'BlinkMacSy=
+stemFont', 'Roboto', 'Arial', sans-serif; font-size: 14px; text-decoration:=
+ line-through; color: #666666; padding: 2px 4px; display: inline-block;
+}
+
+.row-label {
+  font-family: 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'Roboto',=
+ 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333;
+  padding: 2px 4px;
+  line-height: 16px;
+  text-align: left;
+}
+
+/* List */
+.num {
+  background: #f2f2f2;
+  height: 20px;
+  padding: 0 7px;
+  font-size: 14px;
+}
+
+.code li {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+  font-size: 14px;
+  text-align: left;
+}
+
+span.monospaced {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+}
+
+.list li {
+  padding: 5px;
+}
+
+.data {
+  word-break: break-all;
+  font-family:monospace;
+}
+
+.red {
+  color: red;
+}
+
+ul, ol {
+  padding: 0 20px;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+.anchors {
+  list-style-type: square;
+}
+
+ul ul, ol ul {
+  padding: 0 30px;
+}
+
+/* Other */
+.author {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  padding: 5px 0 0;
+}
+
+.code {
+  padding:0;
+  list-style:none;
+  color: #666666;
+}
+
+.code li {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+}
+
+.container {
+  padding: 0px;
+}
+
+.content {
+  padding: 20px 0px 20px 0px;
+}
+
+.title a {
+  color: #212121 !important;
+  text-decoration: none;
+}
+
+.title a:hover {
+  text-decoration: underline;
+}
+
+/* MOBILE STYLES */
+@media screen and (max-width: 525px) {
+
+  .content {
+    padding: 0px !important;
+  }
+
+  .header {
+    padding: 10px 30px !important;
+  }
+  .mobile-sm-txt {
+    font-size: 14px !important;
+  }
+  .mobile-sm-txt span {
+    display: block;
+  }
+
+  /* ALLOWS FOR FLUID TABLES */
+  .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ADJUSTS LAYOUT OF LOGO IMAGE */
+  .logo img {
+    margin: 0 auto !important;
+  }
+
+  /* HIDE CONTENT ON MOBILE */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* GIVE IMAGES MAX WIDTH SO THEY SQUISH NICE */
+  .img-max {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* FULL-WIDTH TABLES */
+  .responsive-table {
+    width: 100% !important;
+  }
+
+  /* UTILITY CLASSES FOR ADJUSTING PADDING ON MOBILE */
+  .padding {
+    padding: 10px 5% 15px 5% !important;
+  }
+    .img-padding {
+    padding: 0;
+  }
+  .padding-meta {
+    padding: 20px !important;
+  }
+  .no-padding {
+    padding: 0 !important;
+  }
+
+  /* CONTENT */
+  .comment {
+    padding: 16px 22px !important;
+  }
+  .logo {
+    margin: 0 auto;
+    padding: 10px 0 10px 5% !important;
+  }
+  .gfx-promo {
+    padding-bottom: 20px;
+    width: 40% !important;
+  }
+  .gfx-promo img {
+    width: 100%;
+  }
+
+  /* ADJUST BUTTONS ON MOBILE */
+  .mobile-button-container {
+    margin: 0 auto;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+  .mobile-button {
+    padding: 4px !important;
+    display: block !important;
+  }
+  .mobile-promos {
+    text-align: center !important;
+    padding: 30px !important;
+  }
+
+  .foot-logo {
+    padding: 5px 0 25px !important;
+  }
+}
+
+/* Extra small device */
+@media screen and (max-width: 413px) {
+  body[class=3D"body-padding"] {
+      padding: 0 !important;
+  }
+  /* HIDE CONTENT ON MOBILE */
+  td[class=3D"mobile-hide-xs"], td[class=3D"mobile-hide-xs comment-gfx"]{
+    display:none;
+  }
+  /* ADJUST BUTTONS ON MOBILE */
+  table[class=3D"mobile-button-container"]{
+      margin:0 auto;
+      width:100% !important;
+  }
+}
+
+/* Android fix */
+div[style*=3D"margin: 16px 0;"] { margin: 0 !important; }
+
+
+/* MARKDOWN RENDERING STYLES */
+.markdown-code {
+    background-color: #EAEAEA;
+}
+
+.markdown-table {
+    border: 1;
+    border-collapse: collapse;
+    border-style: solid;
+    border-width: thin;
+    border-color: #A6A6A6;
+    padding: 8px 10px 10px 10px;
+}
+
+        /* FILE-LIST-SPECIFIC STYLES */
+.file-delete {
+    text-decoration: line-through;
+}
+
+/* COMMENT-SPECIFIC STYLES */
+
+.new-pr-comment {
+    background-color: #0078d4;
+}
+
+.pr-comment-spacer {
+    padding: 0px;
+}
+
+.pr-comment-content {
+    padding: 5px;
+}
+
+.pr-comment-date {
+    color: #737373;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.pr-comment-like {
+    color: #737373;
+    margin-left: 5px;
+}
+
+.pr-reviewer-name {
+    font-weight: 600;
+}
+
+
+</style>
+</head>
+<body>
+
+
+<div style=3D"display: none; font-size: 1px; max-height: 0px; max-width: 0p=
+x; opacity: 0; overflow: hidden; color: white">
+    D'ANGIOLO RENATO created a new pull request
+</div>
+
+
+
+<div class=3D"container" style=3D"font-family: 'Segoe UI', '-apple-system',=
+ 'BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; color: #212121; font-=
+size: 14px; background: #f8f8f8">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">
+    <tr>
+        <td class=3D"mobile-hide" style=3D"background-color: white; border-=
+bottom: solid #eaeaea 1px"></td>
+        <td class=3D"content" width=3D"640" style=3D"padding: 0px; max-widt=
+h: 640px; background-color: white; border-bottom: solid #eaeaea 1px">
+            <!--[if (gte mso 9)|(IE)]>=20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"width: 640px; height:0;"><tr><td></td></tr></table>=20
+            <![endif]-->
+           =20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%">
+               =20
+               =20
+<tr>
+    <td style=3D"padding: 20px 24px 25px 24px; background: white">
+        <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"10=
+0%" class=3D"responsive-table">
+            <tr>
+                <td>
+                    <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ class=3D"logo" width=3D"100%">
+                        <tr>
+                            <td valign=3D"middle" style=3D"vertical-align: =
+middle">
+                                <img alt=3D"Microsoft" height=3D"16" src=3D=
+"https://cdn.vsassets.io/content/notifications/v3/microsoft.png" width=3D"8=
+0">
+                            </td>
+                                <td valign=3D"middle" style=3D"word-wrap: n=
+one; vertical-align: middle; text-align: right">
+                                    <span style=3D"color: #666666">Azure</s=
+pan> <span style=3D"color: #0078D4; font-weight: bold">DevOps</span>
+                                </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+               =20
+               =20
+
+
+
+
+<tr>
+<td class=3D"hero" style=3D"padding: 0px 24px">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"max-width: 592px" class=3D"responsive-table">
+  <tr>
+    <td>
+      <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0=
+">
+        <tr>
+          <td>
+            <table>
+
+                <tr>
+                  <td class=3D"sub-title" style=3D"padding: 0 0 4px 0; colo=
+r: #666; font-size: 17px; font-weight: normal; line-height: 23px; word-brea=
+k: break-word;">
+                    feat(core/toolbar/teamrgs/110378/public): Razioinalizza=
+zione Toolbar
+                  </td>
+                </tr>
+                <tr>
+                  <td class=3D"title" style=3D"padding: 0 0 24px 0; color: =
+#212121; font-size: 28px; font-weight: bold; letter-spacing: -0.04em; line-=
+height: 40px; word-break: break-word;">
+                    D'ANGIOLO RENATO created a new pull request
+                  </td>
+                </tr>
+
+
+              <tr>
+                <td class=3D"pre-message" style=3D"padding: 0 0 24px 0; col=
+or: #666;">
+                 =20
+
+    <img style=3D"width: 12px;height:12px;" src=3D"https://cdn.vsassets.io/=
+content/notifications/pushrepo.png">
+    <a style=3D"margin-left: 2px;" href=3D"https://urldefense.proofpoint.co=
+m/v2/url?u=3Dhttps-3A__dev.azure.com_EconomiaRGS1Collection_UIKIT-5FRGS_-5F=
+git_verso-2Dcore-2Dkit_-3Ftracking-5Fdata-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGU=
+iOiJOb3RpZmljYXRpb24iLCJTSUQiOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC=
+1zdWJzY3JpcHRpb24iLCJTVHlwZSI6IkNPTiIsIlJlY2lwIjo1LCJFbGVtZW50IjoiYnJhbmNoZ=
+XMvcmVwb0xpbmsifQ-253d-253d&amp;d=3DDwMFaQ&amp;c=3DBSDicqBQBDjDI9RkVyTcHQ&a=
+mp;r=3DbVSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5rfIRU&amp;m=3DwL0QjCq9xKi4D6KO=
+R5zGNcvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_JcpW7&amp;s=3D5jz7cP51tU1NBK9tPM=
+reospSBk-OyCvEaVv77-eAE_E&amp;e=3D">verso-core-kit</a>
+    &nbsp;
+    <img style=3D"width: 12px;height:12px;" src=3D"https://cdn.vsassets.io/=
+content/notifications/branch.png">
+    <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__dev.a=
+zure.com_EconomiaRGS1Collection_UIKIT-5FRGS_-5Fgit_verso-2Dcore-2Dkit_-3Ftr=
+acking-5Fdata-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQ=
+iOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC1zdWJzY3JpcHRpb24iLCJTVHlwZS=
+I6IkNPTiIsIlJlY2lwIjo1LCJFbGVtZW50IjoiYnJhbmNoZXMvc291cmNlQnJhbmNoTGluayJ9-=
+23version-3DGBfeat-252F110378-2Drazionalizzazione-2Dtoolbar-2Dbar&amp;d=3DD=
+wMFaQ&amp;c=3DBSDicqBQBDjDI9RkVyTcHQ&amp;r=3DbVSIpe0l8439lBOWDNFSXIZsvB99JW=
+L5UMt2q5rfIRU&amp;m=3DwL0QjCq9xKi4D6KOR5zGNcvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN=
+9FauZ_JcpW7&amp;s=3DU9OHUqH5XnxMjCfNL-ZM5Dv8ya7zhOVcBWzEdTgHFXA&amp;e=3D">f=
+eat/110378-razionalizzazione-toolbar-bar</a>
+    merge into
+    <img style=3D"width: 12px;height:12px;" src=3D"https://cdn.vsassets.io/=
+content/notifications/branch.png">
+    <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__dev.a=
+zure.com_EconomiaRGS1Collection_UIKIT-5FRGS_-5Fgit_verso-2Dcore-2Dkit_-3Ftr=
+acking-5Fdata-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQ=
+iOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC1zdWJzY3JpcHRpb24iLCJTVHlwZS=
+I6IkNPTiIsIlJlY2lwIjo1LCJFbGVtZW50IjoiYnJhbmNoZXMvdGFyZ2V0QnJhbmNoTGluayJ9-=
+23version-3DGBdevelop&amp;d=3DDwMFaQ&amp;c=3DBSDicqBQBDjDI9RkVyTcHQ&amp;r=
+=3DbVSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5rfIRU&amp;m=3DwL0QjCq9xKi4D6KOR5zG=
+Ncvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_JcpW7&amp;s=3Dvmw_qoEZryYAs7YvZN-pxR=
+euuXxLfIGHA8CAIpSnsoA&amp;e=3D">develop</a>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td class=3D"message" style=3D"padding: 0 0 24px 0">
+                    <p style=3D"font-family: 'Segoe UI', '-apple-system', '=
+BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; padding: 0px; margin: 0=
+px; font-size: 14px; line-height: 20px; color: #444444; word-break: break-w=
+ord;"><p>Razionalizzato componente toolbar del core, presenta due slot &quo=
+t;content&quot; e &quot;cta&quot; per ospitare i contenuti posti agli estre=
+mi del componente, un property &quot;background&quot; per sovrascivere il c=
+olore di sfondo, una property &quot;contained&quot; per variare i margini s=
+e il componente si trova inserito all'interno di altri oppure =C3=A8 a live=
+llo root della pagina, una property &quot;size&quot; per determinarne l'alt=
+ezza, spostato inoltre il componente bar nel productkit.</p>
+</p>
+               </td>
+              </tr>
+             =20
+
+              <tr>
+                <td style=3D"padding: 0 0 24px 0">
+                   =20
+
+
+
+<table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+  <tr>
+    <td>
+      <table border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+        <tr>
+             =20
+              <td align=3D"center" bgcolor=3D"#007acc" style=3D"padding: 8p=
+x 12px; border-radius: 2px;">
+                <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhtt=
+ps-3A__dev.azure.com_EconomiaRGS1Collection_UIKIT-5FRGS_-5Fgit_verso-2Dcore=
+-2Dkit_pullrequest_5816-3Ftracking-5Fdata-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGU=
+iOiJOb3RpZmljYXRpb24iLCJTSUQiOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC=
+1zdWJzY3JpcHRpb24iLCJTVHlwZSI6IkNPTiIsIlJlY2lwIjo1LCJfeGNpIjp7Ik5JRCI6NzUzO=
+Tk2Mjk1LCJNUmVjaXAiOiJtMD01ICIsIkFjdCI6IjQ1ZmE0ODk1LTZhNzctNGRmMy1hMDMxLTc4=
+NjMzOWE1NGQzYSJ9LCJFbGVtZW50IjoiaGVyby9jdGEifQ-253d-253d&amp;d=3DDwMFaQ&amp=
+;c=3DBSDicqBQBDjDI9RkVyTcHQ&amp;r=3DbVSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5r=
+fIRU&amp;m=3DwL0QjCq9xKi4D6KOR5zGNcvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_Jcp=
+W7&amp;s=3DiTmLltuYtWQlOFFhvi7kZ1wWic6--lRntlv92G7vWz4&amp;e=3D" style=3D"f=
+ont-weight: 500; font-size: 14px; text-decoration: none; padding: 0px; disp=
+lay: inline-block; color: #ffffff" class=3D"mobile-button btn-primary">
+                  View pull request
+                </a>
+              </td>
+             =20
+             =20
+           =20
+
+
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</td>
+</tr>
+
+            </table>
+        </td>
+        <td class=3D"mobile-hide" style=3D"background-color: white; border-=
+bottom: solid #eaeaea 1px"></td>
+    </tr>
+    <tr>
+        <td class=3D"mobile-hide" style=3D"background: #f8f8f8"></td>
+        <td class=3D"content" width=3D"640" style=3D"padding: 0px; max-widt=
+h: 640px; background: #f8f8f8">
+            <!--[if (gte mso 9)|(IE)]>=20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"width: 640px; height:0;"><tr><td></td></tr></table>=20
+            <![endif]-->
+           =20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%">           =20
+               =20
+
+               =20
+               =20
+
+<tr>
+<td style=3D"padding: 24px 24px 24px 24px">
+    <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" =
+class=3D"responsive-table">
+        <tr>
+            <td style=3D"color: #666666; font-size: 12px; line-height: 18px=
+;">
+                                           =20
+                                We sent you this notification due to a defa=
+ult subscription.
+                                    <a href=3D"https://urldefense.proofpoin=
+t.com/v2/url?u=3Dhttps-3A__dev.azure.com_EconomiaRGS1Collection_-5Fnotifica=
+tions-3FsubscriptionId-3Dms.vss-2Dcode.pull-2Drequest-2Dupdated-2Dsubscript=
+ion-26publisherId-3Dms.vss-2Dcode.git-2Devent-2Dpublisher-26tracking-5Fdata=
+-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiJtcy52c3Mt=
+Y29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC1zdWJzY3JpcHRpb24iLCJTVHlwZSI6IkNPTiIsIlJ=
+lY2lwIjo1LCJfeGNpIjp7Ik5JRCI6NzUzOTk2Mjk1LCJNUmVjaXAiOiJtMD01ICIsIkFjdCI6Ij=
+Q1ZmE0ODk1LTZhNzctNGRmMy1hMDMxLTc4NjMzOWE1NGQzYSJ9LCJFbGVtZW50IjoiZm9vdGVyL=
+3ZpZXdMaW5rIn0-253d&amp;d=3DDwMFaQ&amp;c=3DBSDicqBQBDjDI9RkVyTcHQ&amp;r=3Db=
+VSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5rfIRU&amp;m=3DwL0QjCq9xKi4D6KOR5zGNcvd=
+p9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_JcpW7&amp;s=3DfXNS2egJx-mbrUMDs0y0xoinF8=
+z_y9xOpdSXxMfdNnM&amp;e=3D">View</a>
+                               =20
+                                    | <a href=3D"https://urldefense.proofpo=
+int.com/v2/url?u=3Dhttps-3A__dev.azure.com_EconomiaRGS1Collection_-5Fnotifi=
+cations-3FsubscriptionId-3Dms.vss-2Dcode.pull-2Drequest-2Dupdated-2Dsubscri=
+ption-26publisherId-3Dms.vss-2Dcode.git-2Devent-2Dpublisher-26action-3Dunsu=
+bscribe-26tracking-5Fdata-3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXR=
+pb24iLCJTSUQiOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkYXRlZC1zdWJzY3JpcHRpb2=
+4iLCJTVHlwZSI6IkNPTiIsIlJlY2lwIjo1LCJfeGNpIjp7Ik5JRCI6NzUzOTk2Mjk1LCJNUmVja=
+XAiOiJtMD01ICIsIkFjdCI6IjQ1ZmE0ODk1LTZhNzctNGRmMy1hMDMxLTc4NjMzOWE1NGQzYSJ9=
+LCJFbGVtZW50IjoiZm9vdGVyL3Vuc3Vic2NyaWJlTGluayJ9&amp;d=3DDwMFaQ&amp;c=3DBSD=
+icqBQBDjDI9RkVyTcHQ&amp;r=3DbVSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5rfIRU&amp=
+;m=3DwL0QjCq9xKi4D6KOR5zGNcvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_JcpW7&amp;s=
+=3Dlg02Gpxy2CdOnOFaUxPRCr9hInjgfZFDCSn8doHgniE&amp;e=3D">Unsubscribe</a>
+                           =20
+                   =20
+            </td>
+        </tr>
+            <tr>
+                <td style=3D"padding-top: 4px; color: #666666; font-size: 1=
+2px; line-height: 18px;">
+                    Microsoft respects your privacy. Review our Online Serv=
+ices <a href=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__priv=
+acy.microsoft.com_privacystatement&amp;d=3DDwMFaQ&amp;c=3DBSDicqBQBDjDI9RkV=
+yTcHQ&amp;r=3DbVSIpe0l8439lBOWDNFSXIZsvB99JWL5UMt2q5rfIRU&amp;m=3DwL0QjCq9x=
+Ki4D6KOR5zGNcvdp9hOUZ9Q4hyb15eHLaIpvjojexoHN9FauZ_JcpW7&amp;s=3DcUBWXg9hxDn=
+2gjJWWpfaxszYqZydywpB4csiGfoSAZ0&amp;e=3D">Privacy Statement</a>.<br>One Mi=
+crosoft Way, Redmond, WA, USA 98052.
+                </td>
+            </tr>
+       =20
+            <tr>
+                <td style=3D"padding-top: 4px; color: #666666; font-size: 1=
+2px; line-height: 18px; color: #212121;">
+                        Sent from
+                        Azure <span style=3D"color: #0078D4; font-weight: b=
+old">DevOps</span>
+                </td>
+            </tr>
+    </table>
+</td>
+</tr>
+
+            </table>
+           =20
+        </td>  =20
+        <td class=3D"mobile-hide" style=3D"background: #f8f8f8"></td>
+    </tr>
+ </table>
+</div>
+
+
+
+   =20
+
+<script type=3D"application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "EmailMessage",
+    "potentialAction": {
+        "@type": "ViewAction",
+        "target": "https://dev.azure.com/EconomiaRGS1Collection/UIKIT_RGS/_=
+git/verso-core-kit/pullrequest/5816?tracking_data=3DeyJTb3VyY2UiOiJFbWFpbCI=
+sIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdX=
+BkYXRlZC1zdWJzY3JpcHRpb24iLCJTVHlwZSI6IkNPTiIsIlJlY2lwIjo1LCJfeGNpIjp7Ik5JR=
+CI6NzUzOTk2Mjk1LCJNUmVjaXAiOiJtMD01ICIsIkFjdCI6IjQ1ZmE0ODk1LTZhNzctNGRmMy1h=
+MDMxLTc4NjMzOWE1NGQzYSJ9LCJFbGVtZW50IjoiY2xpZW50QWN0aW9uL09XQSJ9",
+        "url": "https://dev.azure.com/EconomiaRGS1Collection/UIKIT_RGS/_git=
+/verso-core-kit/pullrequest/5816?tracking_data=3DeyJTb3VyY2UiOiJFbWFpbCIsIl=
+R5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiJtcy52c3MtY29kZS5wdWxsLXJlcXVlc3QtdXBkY=
+XRlZC1zdWJzY3JpcHRpb24iLCJTVHlwZSI6IkNPTiIsIlJlY2lwIjo1LCJfeGNpIjp7Ik5JRCI6=
+NzUzOTk2Mjk1LCJNUmVjaXAiOiJtMD01ICIsIkFjdCI6IjQ1ZmE0ODk1LTZhNzctNGRmMy1hMDM=
+xLTc4NjMzOWE1NGQzYSJ9LCJFbGVtZW50IjoiY2xpZW50QWN0aW9uL05vbk9XQSJ9",
+        "name": "View pull request"
+    },
+    "description": "View pull request"
+}
+</script>
+
+
+<img src=3D"https://mucp.api.account.microsoft.com/m/v2/v?d=3DAIAADDOH2J2Z4=
+4BHXDIPVXBNW4V6A3LKVBV7SY6ZNDOVII3WGGZHDILNTE6UQWGVN3X535TUY7F4O3535HRKIOIF=
+ONNBEMHQVIYJZ67FHX5VZAXQVTQI7EYMG64Z56PBTRO5AZDXQ5NJ2GZFNS4CCS2LMF4C34Y&amp=
+;i=3DAIAACNXK3P3H3PZIVINLEIU7KBZVLGD7Q6LXGBKTYU25PGB4VXQXPRG63XOLGRF3O5MZJW=
+37IZHF5DMUTBO3JNZZXYJCQVZ3MGTWKLRZPHCRO36DYUH42JE64JEMY6Z2LFUBKV5GN6FJ2J7VV=
+TRBF62XYAGMUIES5V6RFGGTDT75NG5EIZ4KGRQDTND3TOUMXZEKIPOJXXRHIR5DB6NNSZMV42EX=
+Z7ROJWWYEHWWOB4UNPYLYRL2ZH7LTNXIL4CVHR57HVBDI6MHKUYYFWCDRGJ7U55UXGI" width=
+=3D"1" height=3D"1" tabindex=3D"-1" aria-hidden=3D"true" alt=3D""></body>
+</html>
+<!-- cV: UIc3yaQKB0WBPKMi.3.1.1.4 -->=

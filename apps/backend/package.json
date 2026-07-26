@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node --env-file=.env src/index.ts",
-    "start:local": "node --env-file=.env.local src/index.ts"
+    "start:local": "node --env-file=.env.local src/index.ts",
+    "test": "vitest run"
   },
   "packageManager": "pnpm@10.13.1",
   "dependencies": {
@@ -26,6 +27,7 @@
     "@types/mailparser": "^3.4.6",
     "@types/node": "^26.1.1",
     "@types/ws": "^8.18.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }
