@@ -1,15 +1,37 @@
-import { ImapFlow } from "imapflow";
+import { ImapFlow, type FetchMessageObject } from "imapflow";
+import { parseNotificationEmail, type NotificationPayload } from "./NotificationParser.ts";
+
+async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> {
+  if (msg.source) {
+    try {
+      return await parseNotificationEmail(msg.source);
+    } catch (error) {
+      console.error("failed to parse notification email, falling back to subject only", error);
+    }
+  }
+
+  const title = msg.envelope?.subject ?? "subject empty";
+  return {
+    id: msg.envelope?.messageId ?? String(msg.uid),
+    title,
+    body: title,
+    category: "unknown",
+    createdAt: (msg.envelope?.date ?? new Date()).toISOString(),
+    read: false,
+    metadata: { action: "unknown" },
+  };
+}
 
 export class MailService {
   client: ImapFlow;
   sender: string;
-  notify: (messages: string[]) => void;
+  notify: (notifications: NotificationPayload[]) => void;
 
   constructor(
     email: string,
     password: string,
     sender: string,
-    notify: (messages: string[]) => void,
+    notify: (notifications: NotificationPayload[]) => void,
   ) {
     this.client = new ImapFlow({
       host: "imap.gmail.com",
@@ -48,11 +70,13 @@ export class MailService {
         if (data.count > lastCount) {
           let newMessages = await this.client.fetchAll(`${lastCount + 1}:*`, {
             envelope: true,
+            source: true,
           });
-          for (let msg of newMessages) {
+          const notifications = await Promise.all(
             // if (msg.envelope?.sender?.at(0)?.address === this.sender)
-            this.notify([msg.envelope?.subject ?? "subject empty"]);
-          }
+            newMessages.map((msg) => toPayload(msg)),
+          );
+          this.notify(notifications);
           lastCount = data.count;
         }
       });
@@ -74,14 +98,14 @@ export class MailService {
   }
 
   async fetchAll(): Promise<NotificationPayload[]> {
-    const newMessages = await this.client.fetchAll("1:*", {
+    const newMessages = await this.client.fetchAll("*:-100", {
       envelope: true,
+      source: true,
     });
 
-    return (
-      newMessages
-        // .filter((msg) => msg.envelope?.sender?.at(0)?.address === this.sender)
-        .map((msg) => msg.envelope?.subject ?? "subject empty")
+    return Promise.all(
+      // .filter((msg) => msg.envelope?.sender?.at(0)?.address === this.sender)
+      newMessages.map((msg) => toPayload(msg)),
     );
   }
 }

@@ -1,16 +1,17 @@
 import { Configs, SENDER_TO_NOTIFY } from "./config.ts";
 import { MailService } from "./services/MailService.ts";
+import type { NotificationPayload } from "./services/NotificationParser.ts";
 import { NotificationService } from "./services/NotificationService.ts";
 
 let mailService: MailService;
 let notificationService: NotificationService;
 
 
-function notify(messages: string[]) {
-  notificationService?.notify(messages);
+function notify(notifications: NotificationPayload[]) {
+  notificationService?.notify(notifications);
 }
 
-function fullDump(notify: (messages: string[]) => void) {
+function fullDump(notify: (notifications: NotificationPayload[]) => void) {
   console.log("full dump")
   mailService.fetchAll().then(notify);
 }

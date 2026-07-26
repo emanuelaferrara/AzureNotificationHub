@@ -1,12 +1,11 @@
 import { WebSocketServer, type Server } from "ws";
+import type { NotificationPayload } from "./NotificationParser.ts";
 
 export class NotificationService {
   wss: Server | undefined;
-  fullDump: (notify: (notifications: string[]) => void) => void;
+  fullDump: (notify: (notifications: NotificationPayload[]) => void) => void;
 
-  constructor(
-    fullDump: (notify: (notifications: string[]) => void) => void,
-  ) {
+  constructor(fullDump: (notify: (notifications: NotificationPayload[]) => void) => void) {
     this.fullDump = fullDump;
   }
 
@@ -31,7 +30,7 @@ export class NotificationService {
     });
   }
 
-  notify = (notifications: string[]): void => {
+  notify = (notifications: NotificationPayload[]): void => {
     if (!this.wss) {
       throw new Error("wss is not initialized");
     }
@@ -41,15 +40,11 @@ export class NotificationService {
     if (clients.length === 0) {
       throw new Error("no client available");
     }
-    
+
     clients.forEach((client) => {
-      notifications.forEach((message) => {
-        client.send(JSON.stringify({
-          title: message,
-          body: "body",
-          notify: true
-        }), (error) => {
-          console.log("notify",{message,error})
+      notifications.forEach((notification) => {
+        client.send(JSON.stringify(notification), (error) => {
+          console.log("notify", { notification, error });
         });
       });
     });

@@ -122,14 +122,14 @@ export async function parseNotificationEmail(source: Buffer): Promise<Notificati
   const initiator = stringHeader(parsed.headers, "x-vss-event-initiator");
   const scope = stringHeader(parsed.headers, "x-vss-scope");
 
-  const category: NotificationCategory = (eventType && EVENT_TYPE_TO_CATEGORY[eventType]) ?? "unknown";
+  const category: NotificationCategory = (eventType ? EVENT_TYPE_TO_CATEGORY[eventType] : undefined) ?? "unknown";
   const { org, project, repo } = parseScope(scope);
 
   let action = "unknown";
   let buildContext: "pipeline" | "pr-build" | undefined;
 
   if (category === "build") {
-    action = (trigger && BUILD_TRIGGER_TO_ACTION[trigger]) ?? "unknown";
+    action = (trigger ? BUILD_TRIGGER_TO_ACTION[trigger] : undefined) ?? "unknown";
     buildContext = repo ? "pr-build" : "pipeline";
   } else if (category === "mention") {
     action = "mentioned";
