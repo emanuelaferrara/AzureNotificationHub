@@ -44,6 +44,18 @@ export interface Spec extends TurboModule {
   notify(options: NotificationOptions): Promise<void>;
 
   /**
+   * The notifications currently in Notification Center, as a JSON array string
+   * (each: {identifier, title, body, subtitle?, userInfoJson?, deliveredAt}).
+   */
+  getDeliveredNotifications(): Promise<string>;
+
+  /** Remove specific delivered notifications from Notification Center by id. */
+  removeDeliveredNotifications(identifiers: Array<string>): Promise<void>;
+
+  /** Remove all delivered notifications from Notification Center. */
+  removeAllDeliveredNotifications(): Promise<void>;
+
+  /**
    * The response for the notification click that launched/foregrounded the app,
    * as a JSON string ({identifier, actionIdentifier, userInfoJson}), or an
    * empty string if the app was not started by a click. Reads-and-clears: a

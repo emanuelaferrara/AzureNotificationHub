@@ -47,6 +47,19 @@ export type NotificationResponse = {
   userInfo?: NotificationUserInfo;
 };
 
+/** A notification currently shown in Notification Center. */
+export type DeliveredNotification = {
+  /** The identifier you passed to {@link notify}, or an OS-generated UUID. */
+  identifier: string;
+  title: string;
+  body: string;
+  subtitle?: string;
+  /** The opaque payload you attached via {@link notify}, if any. */
+  userInfo?: NotificationUserInfo;
+  /** When the OS delivered it, as an ISO-8601 string. */
+  deliveredAt: string;
+};
+
 /**
  * Ask the OS for permission to post notifications. Shows the system prompt the
  * first time it is called. Resolves to whether permission was granted.
@@ -123,6 +136,56 @@ export function addNotificationResponseListener(
 export async function getInitialNotificationResponse(): Promise<NotificationResponse | null> {
   const json = await MacNotifications.getInitialNotificationResponse();
   return parseResponse(json);
+}
+
+/** The notifications currently shown in Notification Center. */
+export async function getDeliveredNotifications(): Promise<DeliveredNotification[]> {
+  const json = await MacNotifications.getDeliveredNotifications();
+  if (!json) {
+    return [];
+  }
+  try {
+    const raw = JSON.parse(json) as Array<{
+      identifier?: string;
+      title?: string;
+      body?: string;
+      subtitle?: string;
+      userInfoJson?: string;
+      deliveredAt?: string;
+    }>;
+    return raw.map(n => {
+      let userInfo: NotificationUserInfo | undefined;
+      if (n.userInfoJson) {
+        try {
+          userInfo = JSON.parse(n.userInfoJson) as NotificationUserInfo;
+        } catch {
+          userInfo = undefined;
+        }
+      }
+      return {
+        identifier: n.identifier ?? '',
+        title: n.title ?? '',
+        body: n.body ?? '',
+        subtitle: n.subtitle,
+        userInfo,
+        deliveredAt: n.deliveredAt ?? '',
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/** Remove specific delivered notifications from Notification Center by id. */
+export function removeDeliveredNotifications(
+  identifiers: string[],
+): Promise<void> {
+  return MacNotifications.removeDeliveredNotifications(identifiers);
+}
+
+/** Remove all delivered notifications from Notification Center. */
+export function removeAllDeliveredNotifications(): Promise<void> {
+  return MacNotifications.removeAllDeliveredNotifications();
 }
 
 export default MacNotifications;

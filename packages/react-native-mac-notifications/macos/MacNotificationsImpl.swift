@@ -127,6 +127,64 @@ public class MacNotificationsImpl: NSObject, UNUserNotificationCenterDelegate {
     }
   }
 
+  // MARK: - Delivered notifications
+
+  /// The notifications currently sitting in Notification Center, as a JSON
+  /// array string. The opaque payload is passed through as a raw string
+  /// (`userInfoJson`), never parsed here.
+  @objc(getDeliveredNotificationsWithResolve:reject:)
+  public func getDeliveredNotifications(
+    resolve: @escaping (String) -> Void,
+    reject: @escaping (String, String, NSError?) -> Void
+  ) {
+    center.getDeliveredNotifications { notifications in
+      let formatter = ISO8601DateFormatter()
+      let array: [[String: Any]] = notifications.map { notification in
+        let content = notification.request.content
+        var dict: [String: Any] = [
+          "identifier": notification.request.identifier,
+          "title": content.title,
+          "body": content.body,
+          "deliveredAt": formatter.string(from: notification.date),
+        ]
+        if !content.subtitle.isEmpty {
+          dict["subtitle"] = content.subtitle
+        }
+        if let payload = content.userInfo["payload"] as? String {
+          dict["userInfoJson"] = payload
+        }
+        return dict
+      }
+      guard let data = try? JSONSerialization.data(withJSONObject: array),
+            let string = String(data: data, encoding: .utf8) else {
+        resolve("[]")
+        return
+      }
+      resolve(string)
+    }
+  }
+
+  /// Remove specific delivered notifications from Notification Center by id.
+  @objc(removeDeliveredNotificationsWithIdentifiers:resolve:reject:)
+  public func removeDeliveredNotifications(
+    identifiers: [String],
+    resolve: @escaping () -> Void,
+    reject: @escaping (String, String, NSError?) -> Void
+  ) {
+    center.removeDeliveredNotifications(withIdentifiers: identifiers)
+    resolve()
+  }
+
+  /// Remove all delivered notifications from Notification Center.
+  @objc(removeAllDeliveredNotificationsWithResolve:reject:)
+  public func removeAllDeliveredNotifications(
+    resolve: @escaping () -> Void,
+    reject: @escaping (String, String, NSError?) -> Void
+  ) {
+    center.removeAllDeliveredNotifications()
+    resolve()
+  }
+
   // MARK: - UNUserNotificationCenterDelegate
 
   /// Present notifications as a banner (+ sound) even when the app is focused;

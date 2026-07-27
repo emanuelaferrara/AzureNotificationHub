@@ -110,6 +110,35 @@ RCT_EXPORT_MODULE(MacNotifications)
   resolve([_impl takeInitialResponse]);
 }
 
+- (void)getDeliveredNotifications:(RCTPromiseResolveBlock)resolve
+                           reject:(RCTPromiseRejectBlock)reject
+{
+  [_impl getDeliveredNotificationsWithResolve:^(NSString *json) {
+    resolve(json);
+  }
+                                       reject:reject];
+}
+
+- (void)removeDeliveredNotifications:(NSArray *)identifiers
+                             resolve:(RCTPromiseResolveBlock)resolve
+                              reject:(RCTPromiseRejectBlock)reject
+{
+  [_impl removeDeliveredNotificationsWithIdentifiers:identifiers
+                                             resolve:^{
+                                               resolve(nil);
+                                             }
+                                              reject:reject];
+}
+
+- (void)removeAllDeliveredNotifications:(RCTPromiseResolveBlock)resolve
+                                 reject:(RCTPromiseRejectBlock)reject
+{
+  [_impl removeAllDeliveredNotificationsWithResolve:^{
+    resolve(nil);
+  }
+                                             reject:reject];
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
