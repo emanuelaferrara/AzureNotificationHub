@@ -37,3 +37,21 @@ details.
   and `user` templates, one `team` template, plus a hand-added mention
   subscription). Idempotent: only missing relay subscriptions are created;
   existing ones are left as-is.
+
+## Notification interaction
+
+- **Notification click** — a user clicking a *delivered* macOS notification. The
+  notification package only *reports* the click to the app; it never decides what
+  should happen. Every consequence is chosen app-side.
+
+- **Opaque payload** — app-defined data attached to a notification when it is
+  posted (carried in the OS `userInfo` slot) and handed back verbatim when the
+  notification is clicked. The notification package stores and returns it but
+  never interprets it — that opacity is what keeps the package generic and
+  reusable rather than tailored to this app.
+
+- **Click action** — the app-side behaviour triggered by a [[notification-click]]:
+  e.g. mark the notification read, open a URL in the browser, or open a screen in
+  the already-running app. Derived from the clicked notification's *own data*
+  (does it carry a target URL? is it something you can act on?), deliberately
+  **not** from a fixed category-to-action table.

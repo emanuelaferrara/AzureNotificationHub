@@ -28,6 +28,11 @@
   "codegenConfig": {
     "name": "RNMacNotificationsSpec",
     "type": "modules",
-    "jsSrcsDir": "src"
+    "jsSrcsDir": "src",
+    "ios": {
+      "modulesProvider": {
+        "MacNotifications": "MacNotifications"
+      }
+    }
   }
 }

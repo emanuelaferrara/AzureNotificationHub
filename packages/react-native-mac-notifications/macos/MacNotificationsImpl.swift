@@ -4,10 +4,44 @@ import UserNotifications
 /// Pure-Swift implementation of the macOS notification logic. Exposed to the
 /// Objective-C++ TurboModule boundary via `@objc`; it deliberately deals only
 /// in Foundation types + completion handlers so nothing here touches JSI/C++.
+///
+/// It is also the `UNUserNotificationCenter` delegate. It is a singleton so a
+/// single delegate survives for the whole process (the center holds its
+/// delegate weakly) and so it can be registered very early — from the Obj-C
+/// `+load` — to catch clicks that launched the app.
 @objc(MacNotificationsImpl)
-public class MacNotificationsImpl: NSObject {
+public class MacNotificationsImpl: NSObject, UNUserNotificationCenterDelegate {
+
+  @objc public static let shared = MacNotificationsImpl()
 
   private var center: UNUserNotificationCenter { UNUserNotificationCenter.current() }
+
+  /// Set by the Obj-C module once JS is wired up. When present, clicks are
+  /// emitted live to JS. When nil (e.g. during a cold launch, before JS is
+  /// running) the click is buffered instead and later drained via
+  /// `takeInitialResponse()`.
+  @objc public var emitHandler: ((String) -> Void)?
+
+  /// The click that arrived before JS was listening (typically the click that
+  /// launched the app). Held until `takeInitialResponse()` reads it.
+  private var pendingInitialResponse: String?
+
+  // MARK: - Delegate wiring / cold-start buffer
+
+  /// Become the notification-center delegate. Called from the Obj-C `+load` so
+  /// the delegate is in place before the OS delivers a launch click.
+  @objc public func registerAsDelegate() {
+    center.delegate = self
+  }
+
+  /// Return (and clear) the buffered launch click, or "" if there wasn't one.
+  @objc public func takeInitialResponse() -> String {
+    let response = pendingInitialResponse ?? ""
+    pendingInitialResponse = nil
+    return response
+  }
+
+  // MARK: - Permissions
 
   @objc(requestPermissionWithResolve:reject:)
   public func requestPermission(
@@ -33,12 +67,16 @@ public class MacNotificationsImpl: NSObject {
     }
   }
 
-  @objc(notifyWithTitle:body:subtitle:sound:resolve:reject:)
+  // MARK: - Posting
+
+  @objc(notifyWithTitle:body:subtitle:sound:identifier:userInfoJson:resolve:reject:)
   public func notify(
     title: String,
     body: String,
     subtitle: String?,
     sound: NSNumber?,
+    identifier: String?,
+    userInfoJson: String?,
     resolve: @escaping () -> Void,
     reject: @escaping (String, String, NSError?) -> Void
   ) {
@@ -52,10 +90,14 @@ public class MacNotificationsImpl: NSObject {
     if sound?.boolValue ?? true {
       content.sound = .default
     }
+    // Stored opaquely under a single key; the package never parses it.
+    if let userInfoJson = userInfoJson {
+      content.userInfo = ["payload": userInfoJson]
+    }
 
     // nil trigger => deliver immediately.
     let request = UNNotificationRequest(
-      identifier: UUID().uuidString,
+      identifier: identifier ?? UUID().uuidString,
       content: content,
       trigger: nil
     )
@@ -67,6 +109,54 @@ public class MacNotificationsImpl: NSObject {
       }
       resolve()
     }
+  }
+
+  // MARK: - UNUserNotificationCenterDelegate
+
+  /// Present notifications as a banner (+ sound) even when the app is focused;
+  /// without this the OS suppresses them while the app is frontmost.
+  public func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    completionHandler([.banner, .sound, .list])
+  }
+
+  /// A delivered notification was clicked. Emit it live if JS is listening,
+  /// otherwise buffer it as the launch click.
+  public func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    let json = MacNotificationsImpl.serialize(response)
+    if let emitHandler = emitHandler {
+      emitHandler(json)
+    } else {
+      pendingInitialResponse = json
+    }
+    completionHandler()
+  }
+
+  // MARK: - Helpers
+
+  /// Serialise a response into the JSON envelope the JS layer expects. The
+  /// opaque payload is copied through as a raw string, never parsed here.
+  private static func serialize(_ response: UNNotificationResponse) -> String {
+    let content = response.notification.request.content
+    var dict: [String: Any] = [
+      "identifier": response.notification.request.identifier,
+      "actionIdentifier": response.actionIdentifier,
+    ]
+    if let payload = content.userInfo["payload"] as? String {
+      dict["userInfoJson"] = payload
+    }
+    guard let data = try? JSONSerialization.data(withJSONObject: dict),
+          let string = String(data: data, encoding: .utf8) else {
+      return ""
+    }
+    return string
   }
 
   private static func string(from status: UNAuthorizationStatus) -> String {
