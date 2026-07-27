@@ -45,5 +45,7 @@
 	<true/>
 	<key>RCTNewArchEnabled</key>
 	<true/>
+	<key>LSMultipleInstancesProhibited</key>
+	<true/>
 </dict>
 </plist>

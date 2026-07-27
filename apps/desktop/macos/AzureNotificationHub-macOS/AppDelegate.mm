@@ -12,8 +12,30 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
   self.dependencyProvider = [RCTAppDependencyProvider new];
-  
-  return [super applicationDidFinishLaunching:notification];
+
+  [super applicationDidFinishLaunching:notification];
+
+  // Keep the single main window alive when the user closes it, so a later
+  // dock/notification reactivation can re-focus the existing window instead of
+  // spawning a fresh one (see applicationShouldHandleReopen: below).
+  self.window.releasedWhenClosed = NO;
+}
+
+// Reuse the existing main window whenever the app is reactivated (dock click, or
+// a notification click that reactivates the single instance) rather than letting
+// AppKit open another window. Together with LSMultipleInstancesProhibited
+// (Info.plist), this keeps the app to one instance with one window.
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
+{
+  if (self.window) {
+    if (self.window.isMiniaturized) {
+      [self.window deminiaturize:self];
+    }
+    [self.window makeKeyAndOrderFront:self];
+    [sender activateIgnoringOtherApps:YES];
+    return NO;
+  }
+  return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
