@@ -22,9 +22,9 @@ export type Notification = {
   id: string;
   title: string;
   body: string;
-  category: NotificationCategory;
+  // category: NotificationCategory;
   url?: string;
-  createdAt: string;
-  read: boolean;
-  metadata: NotificationMetadata;
+  // createdAt: string;
+  // read: boolean;
+  // metadata: NotificationMetadata;
 };

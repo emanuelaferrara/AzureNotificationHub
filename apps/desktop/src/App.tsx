@@ -1,8 +1,9 @@
 import { StatusBar, Linking } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NotificationListScreen } from './features/notifications/screens/NotificationListScreen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setSubscriptions } from './services/azure/AzureService';
+import { NotificationsContext } from './features/notifications/context/NotificationsContext';
 import {
   notify,
   requestPermission,
@@ -12,6 +13,7 @@ import {
   DISMISS_ACTION_IDENTIFIER,
   type NotificationResponse,
 } from 'react-native-mac-notifications';
+import { Notification } from './features/notifications/types/Notification';
 
 // Shape of a notification pushed by the backend over the WebSocket. Mirrors the
 // backend's NotificationPayload (only the fields this demo touches are typed).
@@ -23,6 +25,8 @@ type IncomingNotification = {
 };
 
 export default function App() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
   useEffect(() => {
     // Ensure Azure DevOps relay subscriptions exist (idempotent, fire-and-forget).
     setSubscriptions();
@@ -79,20 +83,26 @@ export default function App() {
 
     const setup = async () => {
       const granted = await requestPermission();
-
       socket.onmessage = event => {
         const incoming = JSON.parse(event.data) as IncomingNotification;
         console.log('New message received:', event);
 
         if (granted) {
-          notify({
+          const notification: Notification = {
+            id: incoming.id,
             title: incoming.title,
             body: incoming.body,
-            // Attach the id (and url) so the click handler above can act on it.
-            userInfo: { id: incoming.id, url: incoming.url },
+            url: incoming.url,
+          };
+          notify({
+            title: notification.title,
+            body: notification.body,
+            userInfo: { id: notification.id, url: notification.url },
           }).catch(error => {
             console.error('Error showing notification:', error);
           });
+          setNotifications(notifications => [...notifications, notification]);
+          console.log('setNotifications: ', notifications);
         }
       };
     };
@@ -103,12 +113,15 @@ export default function App() {
       socket.close();
     };
   }, []);
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar barStyle="light-content" />
-        <NotificationListScreen />
+        <NotificationsContext.Provider
+          value={{ notifications, setNotifications }}
+        >
+          <StatusBar barStyle="light-content" />
+          <NotificationListScreen />
+        </NotificationsContext.Provider>
       </SafeAreaView>
     </SafeAreaProvider>
   );
