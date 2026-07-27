@@ -53,8 +53,9 @@ export interface Spec extends TurboModule {
   getInitialNotificationResponse(): Promise<string>;
 
   /**
-   * Fires when a delivered notification is clicked while a JS listener is
-   * attached. Payload is a JSON string: {identifier, actionIdentifier,
+   * Fires when a delivered notification is clicked OR explicitly dismissed
+   * while a JS listener is attached (the two are distinguished by
+   * actionIdentifier). Payload is a JSON string: {identifier, actionIdentifier,
    * userInfoJson}. Kept as a string so the package carries no codegen object
    * schema — the opaque payload is never modelled natively.
    */

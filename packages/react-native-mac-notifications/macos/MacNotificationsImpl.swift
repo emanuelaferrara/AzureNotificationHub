@@ -26,12 +26,26 @@ public class MacNotificationsImpl: NSObject, UNUserNotificationCenterDelegate {
   /// launched the app). Held until `takeInitialResponse()` reads it.
   private var pendingInitialResponse: String?
 
+  /// Applied to every posted notification so the OS reports explicit user
+  /// dismissals (delivered to `didReceive` with the system dismiss action id)
+  /// in addition to clicks. Without a category carrying `.customDismissAction`
+  /// the OS silently drops dismissals. Package-internal; callers never see it.
+  private static let categoryIdentifier = "RNMacNotificationsDefault"
+
   // MARK: - Delegate wiring / cold-start buffer
 
-  /// Become the notification-center delegate. Called from the Obj-C `+load` so
-  /// the delegate is in place before the OS delivers a launch click.
+  /// Become the notification-center delegate and register the dismissal-aware
+  /// category. Called from the Obj-C `+load` so both are in place before the OS
+  /// delivers a launch click.
   @objc public func registerAsDelegate() {
     center.delegate = self
+    let category = UNNotificationCategory(
+      identifier: MacNotificationsImpl.categoryIdentifier,
+      actions: [],
+      intentIdentifiers: [],
+      options: [.customDismissAction]
+    )
+    center.setNotificationCategories([category])
   }
 
   /// Return (and clear) the buffered launch click, or "" if there wasn't one.
@@ -94,6 +108,8 @@ public class MacNotificationsImpl: NSObject, UNUserNotificationCenterDelegate {
     if let userInfoJson = userInfoJson {
       content.userInfo = ["payload": userInfoJson]
     }
+    // Opts this notification into dismissal reporting (see categoryIdentifier).
+    content.categoryIdentifier = MacNotificationsImpl.categoryIdentifier
 
     // nil trigger => deliver immediately.
     let request = UNNotificationRequest(
@@ -123,8 +139,10 @@ public class MacNotificationsImpl: NSObject, UNUserNotificationCenterDelegate {
     completionHandler([.banner, .sound, .list])
   }
 
-  /// A delivered notification was clicked. Emit it live if JS is listening,
-  /// otherwise buffer it as the launch click.
+  /// A delivered notification was interacted with — either clicked (default
+  /// action) or explicitly dismissed (dismiss action; the two are distinguished
+  /// by `response.actionIdentifier`). Emit it live if JS is listening, otherwise
+  /// buffer it as the launch response.
   public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse,

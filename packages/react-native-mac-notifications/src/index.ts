@@ -26,12 +26,21 @@ export type NotificationOptions = {
   userInfo?: NotificationUserInfo;
 };
 
+/** `actionIdentifier` when the user clicked/opened the notification. */
+export const DEFAULT_ACTION_IDENTIFIER =
+  'com.apple.UNNotificationDefaultActionIdentifier';
+
+/** `actionIdentifier` when the user explicitly dismissed the notification. */
+export const DISMISS_ACTION_IDENTIFIER =
+  'com.apple.UNNotificationDismissActionIdentifier';
+
 export type NotificationResponse = {
   /** The identifier you passed to {@link notify}, or an OS-generated UUID. */
   identifier: string;
   /**
-   * Which action was invoked. A plain click is the system default action
-   * ('com.apple.UNNotificationDefaultActionIdentifier').
+   * Which action was invoked. Compare against {@link DEFAULT_ACTION_IDENTIFIER}
+   * (the user clicked/opened it) or {@link DISMISS_ACTION_IDENTIFIER} (the user
+   * dismissed it).
    */
   actionIdentifier: string;
   /** The opaque payload you attached via {@link notify}, if any. */
