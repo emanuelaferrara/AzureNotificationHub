@@ -1,4 +1,12 @@
-export type NotificationCategory = "pull-request" | "pull-request-comment" | "build" | "mention" | "unknown";
+export type NotificationCategory =
+  | "pull-request"
+  | "pull-request-comment"
+  | "build"
+  | "mention"
+  | "work-item"
+  | "push"
+  | "approval"
+  | "unknown";
 
 export type NotificationMetadata = {
   org?: string;

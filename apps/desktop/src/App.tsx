@@ -1,15 +1,76 @@
-import { StatusBar } from 'react-native';
+import { StatusBar, Linking } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NotificationListScreen } from './features/notifications/screens/NotificationListScreen';
 import { useEffect } from 'react';
 import { setSubscriptions } from './services/azure/AzureService';
-import { notify, requestPermission } from 'react-native-mac-notifications';
+import {
+  notify,
+  requestPermission,
+  addNotificationResponseListener,
+  getInitialNotificationResponse,
+  getDeliveredNotifications,
+  DISMISS_ACTION_IDENTIFIER,
+  type NotificationResponse,
+} from 'react-native-mac-notifications';
+
+// Shape of a notification pushed by the backend over the WebSocket. Mirrors the
+// backend's NotificationPayload (only the fields this demo touches are typed).
+type IncomingNotification = {
+  id: string;
+  title: string;
+  body: string;
+  url?: string;
+};
 
 export default function App() {
   useEffect(() => {
     // Ensure Azure DevOps relay subscriptions exist (idempotent, fire-and-forget).
     setSubscriptions();
 
+    // --- Notification interaction handling -------------------------------
+    // The package tells us WHICH notification was interacted with (via the
+    // opaque `userInfo` we attached in notify()) and HOW (actionIdentifier:
+    // clicked vs dismissed). Deciding what to do is app logic and lives here.
+    const handleResponse = (response: NotificationResponse) => {
+      const id = response.userInfo?.id;
+      const url = response.userInfo?.url;
+
+      if (response.actionIdentifier === DISMISS_ACTION_IDENTIFIER) {
+        console.log('Notification dismissed', { id, response });
+        // your code here — e.g. notificationStore.markSeen(id);
+        return;
+      }
+
+      // Default action: the user clicked/opened the notification. If it carries
+      // a URL, open it in the default browser.
+      console.log('Notification clicked', { id, url, response });
+      if (typeof url === 'string' && url.length > 0) {
+        Linking.openURL(url).catch(error => {
+          console.error('Failed to open URL:', url, error);
+        });
+      }
+      // your code here — e.g. notificationStore.markRead(id), or navigate to a
+      // screen when there's no URL.
+    };
+
+    // Cold start: the app may have been launched by clicking a notification.
+    getInitialNotificationResponse().then(response => {
+      if (response) {
+        handleResponse(response);
+      }
+    });
+
+    // Demo: read what's currently sitting in Notification Center. Handy for
+    // rehydrating app state on launch (and removeDeliveredNotifications([id]) /
+    // removeAllDeliveredNotifications() clear them once handled).
+    getDeliveredNotifications().then(delivered => {
+      console.log(`${delivered.length} delivered notifications`, delivered);
+    });
+
+    // Warm: clicks while the app is already running.
+    const unsubscribe = addNotificationResponseListener(handleResponse);
+
+    // --- Incoming notifications over the WebSocket -----------------------
     const socket = new WebSocket('ws://localhost:8080');
 
     socket.onopen = () => {
@@ -20,18 +81,15 @@ export default function App() {
       const granted = await requestPermission();
 
       socket.onmessage = event => {
-        type Message = {
-          title: string;
-          body: string;
-          notify: boolean;
-        }
-        const newMessage = JSON.parse(event.data) as Message;
+        const incoming = JSON.parse(event.data) as IncomingNotification;
         console.log('New message received:', event);
 
         if (granted) {
           notify({
-            title: newMessage.title,
-            body: newMessage.body,
+            title: incoming.title,
+            body: incoming.body,
+            // Attach the id (and url) so the click handler above can act on it.
+            userInfo: { id: incoming.id, url: incoming.url },
           }).catch(error => {
             console.error('Error showing notification:', error);
           });
@@ -40,7 +98,10 @@ export default function App() {
     };
 
     setup();
-    return () => socket.close();
+    return () => {
+      unsubscribe();
+      socket.close();
+    };
   }, []);
 
   return (
