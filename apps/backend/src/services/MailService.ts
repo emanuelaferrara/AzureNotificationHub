@@ -98,7 +98,7 @@ export class MailService {
   }
 
   async fetchAll(): Promise<NotificationPayload[]> {
-    const newMessages = await this.client.fetchAll("*:-100", {
+    const newMessages = await this.client.fetchAll("1:*", {
       envelope: true,
       source: true,
     });

@@ -1,7 +1,15 @@
 import { simpleParser } from "mailparser";
 import type { Headers } from "mailparser";
 
-export type NotificationCategory = "pull-request" | "pull-request-comment" | "build" | "mention" | "unknown";
+export type NotificationCategory =
+  | "pull-request"
+  | "pull-request-comment"
+  | "build"
+  | "mention"
+  | "work-item"
+  | "push"
+  | "approval"
+  | "unknown";
 
 export type NotificationMetadata = {
   org?: string;
@@ -29,6 +37,9 @@ const EVENT_TYPE_TO_CATEGORY: Record<string, NotificationCategory> = {
   "ms.vss-code.git-pullrequest-comment-event": "pull-request-comment",
   "ms.vss-build.build-completed-event": "build",
   "ms.vss-mentions.identity-mention-event": "mention",
+  "ms.vss-work.workitem-changed-event": "work-item",
+  "ms.vss-code.git-push-event": "push",
+  "ms.vss-pipelinechecks-events.approval-pending": "approval",
 };
 
 const BUILD_TRIGGER_TO_ACTION: Record<string, string> = {
@@ -44,6 +55,19 @@ const PR_TRIGGER_TO_ACTION: Record<string, string> = {
   PushNotification: "pushed",
   TitleDescriptionUpdatedNotification: "title-description-updated",
 };
+
+// Work-item mails carry a comma-joined trigger listing every change kind that fired
+// (e.g. "FieldChanged,StateChanged,BoardColumnChanged"). Collapse to the single most
+// notable change, highest priority first.
+const WORK_ITEM_CHANGE_PRIORITY: Array<[string, string]> = [
+  ["CommentAdded", "commented"],
+  ["StateChanged", "state-changed"],
+  ["LinksAdded", "linked"],
+  ["SingleLinkAdded", "linked"],
+  ["BoardColumnChanged", "board-column-changed"],
+  ["TextFieldChanged", "field-changed"],
+  ["FieldChanged", "field-changed"],
+];
 
 // StatusUpdateNotification and ReviewerVoteNotification are ambiguous on their own
 // (they cover several distinct outcomes), so disambiguate using the small, stable
@@ -79,6 +103,16 @@ const ACTION_TO_PHRASE: Record<string, string> = {
   "partially-succeeded": "build partially succeeded",
 };
 
+// Work-item actions reuse some keys (e.g. "commented") that mean something different in the
+// pull-request world, so they get their own phrases resolved by category in buildBody.
+const WORK_ITEM_ACTION_TO_PHRASE: Record<string, string> = {
+  commented: "commented on the work item",
+  "state-changed": "changed the work item state",
+  "board-column-changed": "moved the work item on the board",
+  linked: "linked the work item",
+  "field-changed": "updated the work item",
+};
+
 function stringHeader(headers: Headers, name: string): string | undefined {
   const value = headers.get(name);
   return typeof value === "string" ? value : undefined;
@@ -106,6 +140,24 @@ function detectPrAction(trigger: string | undefined, text: string): string {
     return REVIEWER_VOTE_PHRASES.find(([phrase]) => text.includes(phrase))?.[1] ?? "unknown";
   }
   return "unknown";
+}
+
+function detectWorkItemAction(trigger: string | undefined): string {
+  if (!trigger) return "unknown";
+  const kinds = trigger.split(",").map((kind) => kind.trim());
+  return WORK_ITEM_CHANGE_PRIORITY.find(([kind]) => kinds.includes(kind))?.[1] ?? "unknown";
+}
+
+function buildBody(
+  category: NotificationCategory,
+  action: string,
+  initiator: string | undefined,
+  title: string,
+): string {
+  // push/approval subjects already describe the event ("X pushed to the Y repository").
+  if (category === "push" || category === "approval") return title;
+  const phrase = category === "work-item" ? WORK_ITEM_ACTION_TO_PHRASE[action] : ACTION_TO_PHRASE[action];
+  return initiator && phrase ? `${initiator} ${phrase}` : title;
 }
 
 function parseScope(scope: string | undefined): { org?: string; project?: string; repo?: string } {
@@ -137,10 +189,17 @@ export async function parseNotificationEmail(source: Buffer): Promise<Notificati
     action = "commented";
   } else if (category === "pull-request") {
     action = detectPrAction(trigger, parsed.text ?? "");
+  } else if (category === "work-item") {
+    action = detectWorkItemAction(trigger);
+  } else if (category === "push") {
+    action = "pushed";
+  } else if (category === "approval") {
+    // approval-pending mails carry no initiator/trigger header.
+    action = "pending";
   }
 
   const title = (parsed.subject ?? "").replace(/^\[EXTERNAL\]\s*/, "");
-  const body = initiator && ACTION_TO_PHRASE[action] ? `${initiator} ${ACTION_TO_PHRASE[action]}` : title;
+  const body = buildBody(category, action, initiator, title);
 
   const id = parsed.messageId?.replace(/^<|>$/g, "") ?? crypto.randomUUID();
 

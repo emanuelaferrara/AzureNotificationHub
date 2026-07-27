@@ -1,0 +1,895 @@
+X-GM-THRID: 1871858983825623483
+X-Gmail-Labels: Posta in arrivo,Da leggere
+Delivered-To: marcodanielenotificationrelay@gmail.com
+Received: by 2002:a05:6022:72c9:10b0:109:c4fb:63a7 with SMTP id k9-n1csp1254992las;
+        Mon, 27 Jul 2026 02:17:17 -0700 (PDT)
+X-Received: by 2002:a17:903:37cd:b0:2c7:f5c6:c4a6 with SMTP id d9443c01a7336-2cfdf35d699mr63239065ad.7.1785143836752;
+        Mon, 27 Jul 2026 02:17:16 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1785143836; cv=pass;
+        d=google.com; s=arc-20260327;
+        b=PE/SotNDqOZyLIYofgrpwLe31cW12Q4M/2L4V4AlOMVAQ6UlsGcRgj0h2bVs1yt0Ew
+         WXlJKgPrtX7iV3pKr7R4bBemtRCa7a6i7NpqMWLEffbVaZFOZqpzc8ocXSCUJrxHlihC
+         Hkw1PiRFMwaRb0v6ZcHFShO++eezCsNePssAfWlgoCgAI+JVBbNZ7AT2DRg0VXF0op59
+         kYOU0+ZA05QpRYwDU5y65a2Ow/LvORwkZUiIi+lB7k4OmzhHiqbVuyK7IDvDtRlxVWMh
+         vWxqRdztc2RiYdtx6XRncbUGx3V4CzBDxzmqbExpvB+EaolakREzQTS7xcI7yFHrlSm+
+         gmZw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=request-id:client-request-id:content-transfer-encoding:mime-version
+         :thread-index:references:in-reply-to:date:subject:to:from:sender
+         :dkim-signature:message-id;
+        bh=zn26o1R/EM79Y5RGbo7/Kgn2oZbD7TSimiqN+vbAhIc=;
+        fh=ett1pwmRx0RqAZgBC5OyS7gKVX+joNSgjolH7iUf97g=;
+        b=mROlIM9gidKArOBC81DeKnYvKuKSNUcbb/idpWSAfSeiKWvSSpzo2HBu6lw+f2Zkpq
+         U6I3r4fVF47bmV7SCzvHB8m3rA+GERFKevm3v8M2ArlVWoAjYxN9gb2+drmksaOta2Ew
+         hm1hyY4wIGrPrJCTiqM6dpWRsAXrTsr7X9XwdU2+oOd4m2kexdSfqI4D+08DE4SFRfSc
+         el/ii3O/R7gouSyahUrRtJLgYYMZaTe8rMYyNrzNuR83F8hlJpFeMtFN9FtWt/oK6Wgo
+         7ra51GQS5x3MYtHN4hoAw2GSROp5ggGiSvufjHBLOvfHSX2zsOe1kR8N7ZTwbQtuB30I
+         PhEg==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@microsoft.com header.s=s1024 header.b=CKQYLvAo;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of azuredevops@microsoft.com designates 2a01:111:f403:c105::1 as permitted sender) smtp.mailfrom=azuredevops@microsoft.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+Return-Path: <azuredevops@microsoft.com>
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazlp170100001.outbound.protection.outlook.com. [2a01:111:f403:c105::1])
+        by mx.google.com with ESMTPS id d9443c01a7336-2cfde5e6b41si113511865ad.63.2026.07.27.02.17.16
+        for <marcodanielenotificationrelay@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2026 02:17:16 -0700 (PDT)
+Received-SPF: pass (google.com: domain of azuredevops@microsoft.com designates 2a01:111:f403:c105::1 as permitted sender) client-ip=2a01:111:f403:c105::1;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@microsoft.com header.s=s1024 header.b=CKQYLvAo;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of azuredevops@microsoft.com designates 2a01:111:f403:c105::1 as permitted sender) smtp.mailfrom=azuredevops@microsoft.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+Message-ID: <6a67221c.a5350c2d.29f40f.3f33SMTPIN_ADDED_BROKEN@mx.google.com>
+X-Google-Original-Message-ID: <[61c95464ea9e4a00a5af5cd2d458d2c1-JFZGS42DN5WW25LONFRWC5DJN5XFA3DBORTG64TNFVIHE33EFVBEYMSQPRAXU5LSMVCGK5SPOBZXYRLNMFUWY7CFPBXVG3LUOA======@microsoft.com]>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qPKuExs7hVMbk4bwV9lyLEjqsHqoROLgyxp1oQkAq2/6OGi//FrKCPRh52D+tmB/f1ZjQWiysexLjnl9AWXGzQqEYFU/LJ6RDhTYCbLjjkwW3z/e5NxdzZ0TMlNvBqP8UOY5ILhmRY3PgGIPV61ke9xE5uMsPDv5KCkt/UqotYxXWPOnGEePqI26k4oCf54wZAtYIJGVnEL0FEBJ5ss392wLdvAGtwfbAAK0GmT5CGk3pTAF4XsQFR7ZfSQ1Fs4/WhqBGtOkp5AUc2/A0qv1hyW9+GI/ZjXYe4SWd9PQB//jpKKdiXIXloLWFHiJ3SGI6qzL78WupzekcCw17eE9GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zn26o1R/EM79Y5RGbo7/Kgn2oZbD7TSimiqN+vbAhIc=;
+ b=wFetnqNpA5Z+z88tq3cdjhd/7jaSOJv7gDlO8yAfhkJWiZpDIB4hTTOBDb171JKoGCb6O3H3fGilDKKMCdBmYS9LTOtj6RgEwBOpT4soBUynniq8ln5jYMnpFSk2v2tgedIhwPLXCjekBQJKdDycNkKVBsDBf/dV3Usk+FdVY13P5PJJZmWH5stB40u8oo9UDuRt4PBmHp7ygYTMzi9oTPWxtNmu2K++UIH+LkfNT70b9gUhPLR5YO2UUpvGSJUNXxRefDIv8hc8kaxIs8WhnkqLjagPeM1+AjLfw58Aa41+KFWxPKWZguxk3YoT1GKU/Q8oyBw+Bc4nXaKAcL0QVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from substrate.office.com (2603:10b6:806:8f::9) by
+ SA0PR16MB3823.namprd16.prod.outlook.com with HTTP via
+ BYAPR21CA0012.NAMPRD21.PROD.OUTLOOK.COM; Mon, 27 Jul 2026 09:17:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; d=microsoft.com; s=s1024;
+	c=relaxed/relaxed; t=1785143835; h=from:to:cc:subject:date:messageid;
+	bh=zn26o1R/EM79Y5RGbo7/Kgn2oZbD7TSimiqN+vbAhIc=;
+	b=CKQYLvAoT5YRwXpO/7muUkZsFj1f7DXM/w4qEB8oFHTSL71SwaBtEJjo20XVgMFh5Pr5/GGkTZJ
+	OaE9qA2gIJP3jvJESIzOgzRjqOA5C+xgs610/O+sktbLQ7igG8DiV+/6zC4brvtcCv/P5fKph6PiI
+	dFhcf0nRBHF3s3+bGvQ=
+Sender: Azure DevOps <azuredevops@microsoft.com>
+From: Azure DevOps <azuredevops@microsoft.com>
+To: marcodanielenotificationrelay@gmail.com
+Subject: Issue 110525 - vrs-selection-card
+Date: Mon, 27 Jul 2026 09:17:15 +0000
+In-Reply-To: <Tfs.UIKIT_RGS.110525@dev.azure.com>
+References: <Tfs.UIKIT_RGS.110525@dev.azure.com>
+Thread-Index: Ad0dqLCxg+7aPz80xd9aMlIAKmFTOA==
+X-VSS-Scope: EconomiaRGS1Collection/UIKIT_RGS
+X-VSS-Event-Type: ms.vss-work.workitem-changed-event
+X-VSS-Subscription-ID: 1730515
+X-VSS-Event-Initiator: Maurantonio Giuseppe
+X-VSS-Event-Initiator-Ascii: Maurantonio Giuseppe
+X-VSS-Event-Trigger: TextFieldChanged,CommentAdded
+X-MS-Iris-MetaData: =?utf-8?q?{=22Type=22=3Anull=2C=22Fields=22=3A{=22InstanceID=22=3A=2261c95464-ea9e-4a00-a5af-?=
+ =?utf-8?q?5cd2d458d2c1=22=2C=22ActivityID=22=3A=2295739334-ead8-4ebb-bb65-dc1cce86d?=
+ =?utf-8?q?351=22}}?=
+MIME-Version: 1.0
+X-TsbHttpDeliveryResponseType: Success
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+client-request-id: 61c95464-ea9e-4a00-a5af-5cd2d458d2c1
+request-id: 61c95464-ea9e-4a00-a5af-5cd2d458d2c1
+Return-Path: azuredevops@microsoft.com
+X-MS-TrafficTypeDiagnostic: SA0PR16MB3823:EE_ICP
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|4022899009|69100299015|7149299003|3109299003|7049299003|3122999035|61400799027|19003699004|22082099003|18002099003|16102099003|4076899003|5143699018|8096899003|56012099006|7146999003|10067099003|15920700032;
+X-Microsoft-Antispam-Message-Info:
+	4VzcDnJgNsE3VolY25Oj5fAHuMjgaTS+CuQ+Keor7bxCS0SsS9VjULtj5j30ZjkZ8NWSnxxPfktg4OMbjur1h0Q+83dN4SY0SsJcZP6S7b+18ZBlRNMBXKBV+2dC7lddjlYU2xvCM1U9YunIEo5BCxYOpnrX8JZob8dvNrLPlvAr/3EGmH3R+7SOM9oOe3kH2+nfBuB6I9ksZ8NXpc6SXqN7lUdWLHCUe13E2bSRcU67XBa2Lk3sJiQItn1+/z+y/EF+rLKR1BsMTAySIq3Z6hW3BFuEAOaH/P+U8+TfWIO1VlOVz7OCOc0fZ+cxmXJO3rKPyTP7w2XxX102xpM6gzCDHTshBOJ7hoWjpZ0LPibDK/VGcLwh0IAj3FPYMlCRrrYZzfKZHkEOWKov1BE6mg7rxZqGtDB5DXnVJiMEbRe5IE5Itievje2ttBnRt1dg7sl+Vqz62L64qYhx1Hdsj8oF7uYr6BuoEa+i4dp9ZcH+QBUczj2rMCMS3FUokt379b4OC6TG/Sp4FHL4/dpwU0rMliioN6Y1rbVmec0YwM9VzPx+RoUleoJXwQVbzVpQhNqQvUgKz8HeRuEJbXvBCcMeZZKFRaaQO24HJ9exKuNHZMi1jTdUzUamworkoJCz3vX24bBZnCGH14nQUZ3wfwKeWSUY8plrpcwwH4rUF1U=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:;PTR:;CAT:NONE;SFS:(13230040)(376014)(4022899009)(69100299015)(7149299003)(3109299003)(7049299003)(3122999035)(61400799027)(19003699004)(22082099003)(18002099003)(16102099003)(4076899003)(5143699018)(8096899003)(56012099006)(7146999003)(10067099003)(15920700032);DIR:OUT;SFP:1020;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	okIViDPXtFutWYC3JqasWbHcHhl95WAVjCkEOazPSG6pnNNBiZaEhy6PvDQcAhmQtDwmrmAGUD2KLvLSw7yILFhyVuQRVbIIVzEHDB861Q1E/fW7vQzJMwkY/Vkzq+y/Xz0iLGZ6eg3SLXbEWgVH2cexYuXO3aKgJv2fvUC0HvDoHCXpZf65IqpXMdizePJBtNkQPUq0qhHahbTM2n5jaWCDF27DpKUAS9r5U7jsbf2e5xQSX8qqNtKqYdqJyQgrda1VVPd2oQ0W9d77ZLYOGJ4RjD2Jp3UwrXqU2a7wd5pLi7Jhrl88XXlok1GSLuqQwCFMKRKBDjxft6Li/EYN9qRePCjoVED2L4u4XMGS/pt3ZXsnR+zugmRK2SltADA0gS2bE4B//QCkfAsiRpvJJW63ScwlpsAiaQbC2Zk8MtKhywcT8AIitZIQk6jSmlZPSJM26rn+yu4kr6/Dpv6mLcN60w/pOycD7Z5Z409jz1lGktwN/lCsG0see99r8IwasS5AcywDOKVOUQdAE5AHdTFhzdEs/rKDxO0HHnCkvpWV/lzmn3/RvsjDQuGiwCh9wfHnKVrQRIxykb54NyokiUEOqhr8KWDvksKguM5S1uT/g6d3JFfpUK4boUA1TiLgLAJXqYelcHVkMruCBrGFzpAsOkfn9ExDcwhstrxzfyQXwasabBOH9oxPKotmpk8g
+X-OriginatorOrg: ideasprod07.onmicrosoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HttpSubmission-SA0PR16MB3823
+X-MS-Exchange-CrossTenant-Id: aec3f8d9-c3fc-4d26-a9ac-9d12fd74946a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2026 09:17:15.1340 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id:
+	9dabaaf0-3409-4ae7-3bf7-08deebbfd96d
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR16MB3823
+
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8">
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1"=
+>
+<meta name=3D"ProgId" content=3D"Word.Document">
+<title></title>
+<style>
+    /* Prevent WebKit and Windows mobile changing default text sizes */
+body, table, td, a {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+ /* Remove spacing between tables in Outlook 2007 and up */
+table, td {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+
+/* RESET STYLES */
+img {
+  border: 0;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+  -ms-interpolation-mode: bicubic;
+}
+
+table {
+  border-collapse: collapse !important;
+}
+
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+/* BASE STYLES */
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  background: white;
+}
+
+h1, h2, h3, h4, table, td, th, a, p, span, div, i, em, li, ul, .img-block, =
+img, .comment {
+  font-family: 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'Roboto',=
+ 'Arial', sans-serif;
+}
+
+td {
+  font-size: 14px;
+  line-height: 20px;
+  color: #212121;
+}
+
+a {
+  text-decoration: none;
+  color: #0078D4;
+}
+
+em {
+  font-style: normal;
+  color: #666;
+}
+
+p {
+  margin: 0;
+}
+
+/* Buttons */
+.btn-primary:hover {
+  border-color: #007acc !important;
+}
+.btn-default:hover {
+  border-color: #eaeaea !important;
+}
+.btn-primary:active {
+  border-color: #005faa !important;
+  background: #005faa !important;
+}
+.btn-default:active {
+  border-color: #F0F0F0 !important;
+  background: #F0F0F0 !important;
+}
+
+/* Images */
+.img-block {
+  display: block;
+  color: #ccc;
+  font-size: 10px;
+  max-width: 100%;
+}
+
+.img-padding {
+  padding: 0 20px 0 0;
+}
+
+.comment {
+  color: #333333;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.comment blockquote {
+  color: #666666;
+  border-left: 3px solid #a6a6a6;
+  padding: 1px 0 1px 15px;
+  margin: 12px 0;
+}
+
+.comment-gfx {
+  padding-top: 20px;
+}
+
+.note {
+  font-size: 13px;
+}
+
+/* INFO TABLE */
+.activity-table {
+  display: table;
+}
+
+.active {
+  background: #CEF1DE;font-family: 'Segoe UI', '-apple-system', 'BlinkMacSy=
+stemFont', 'Roboto', 'Arial', sans-serif; font-size: 14px; color: #333333; =
+padding: 2px 4px; display: inline-block;
+}
+
+.inactive {
+  background: #eeeeee;font-family: 'Segoe UI', '-apple-system', 'BlinkMacSy=
+stemFont', 'Roboto', 'Arial', sans-serif; font-size: 14px; text-decoration:=
+ line-through; color: #666666; padding: 2px 4px; display: inline-block;
+}
+
+.row-label {
+  font-family: 'Segoe UI', '-apple-system', 'BlinkMacSystemFont', 'Roboto',=
+ 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333;
+  padding: 2px 4px;
+  line-height: 16px;
+  text-align: left;
+}
+
+/* List */
+.num {
+  background: #f2f2f2;
+  height: 20px;
+  padding: 0 7px;
+  font-size: 14px;
+}
+
+.code li {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+  font-size: 14px;
+  text-align: left;
+}
+
+span.monospaced {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+}
+
+.list li {
+  padding: 5px;
+}
+
+.data {
+  word-break: break-all;
+  font-family:monospace;
+}
+
+.red {
+  color: red;
+}
+
+ul, ol {
+  padding: 0 20px;
+}
+
+ul {
+  list-style-type: circle;
+}
+
+.anchors {
+  list-style-type: square;
+}
+
+ul ul, ol ul {
+  padding: 0 30px;
+}
+
+/* Other */
+.author {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  padding: 5px 0 0;
+}
+
+.code {
+  padding:0;
+  list-style:none;
+  color: #666666;
+}
+
+.code li {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace !important;
+}
+
+.container {
+  padding: 0px;
+}
+
+.content {
+  padding: 20px 0px 20px 0px;
+}
+
+.title a {
+  color: #212121 !important;
+  text-decoration: none;
+}
+
+.title a:hover {
+  text-decoration: underline;
+}
+
+/* MOBILE STYLES */
+@media screen and (max-width: 525px) {
+
+  .content {
+    padding: 0px !important;
+  }
+
+  .header {
+    padding: 10px 30px !important;
+  }
+  .mobile-sm-txt {
+    font-size: 14px !important;
+  }
+  .mobile-sm-txt span {
+    display: block;
+  }
+
+  /* ALLOWS FOR FLUID TABLES */
+  .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ADJUSTS LAYOUT OF LOGO IMAGE */
+  .logo img {
+    margin: 0 auto !important;
+  }
+
+  /* HIDE CONTENT ON MOBILE */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* GIVE IMAGES MAX WIDTH SO THEY SQUISH NICE */
+  .img-max {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* FULL-WIDTH TABLES */
+  .responsive-table {
+    width: 100% !important;
+  }
+
+  /* UTILITY CLASSES FOR ADJUSTING PADDING ON MOBILE */
+  .padding {
+    padding: 10px 5% 15px 5% !important;
+  }
+    .img-padding {
+    padding: 0;
+  }
+  .padding-meta {
+    padding: 20px !important;
+  }
+  .no-padding {
+    padding: 0 !important;
+  }
+
+  /* CONTENT */
+  .comment {
+    padding: 16px 22px !important;
+  }
+  .logo {
+    margin: 0 auto;
+    padding: 10px 0 10px 5% !important;
+  }
+  .gfx-promo {
+    padding-bottom: 20px;
+    width: 40% !important;
+  }
+  .gfx-promo img {
+    width: 100%;
+  }
+
+  /* ADJUST BUTTONS ON MOBILE */
+  .mobile-button-container {
+    margin: 0 auto;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+  .mobile-button {
+    padding: 4px !important;
+    display: block !important;
+  }
+  .mobile-promos {
+    text-align: center !important;
+    padding: 30px !important;
+  }
+
+  .foot-logo {
+    padding: 5px 0 25px !important;
+  }
+}
+
+/* Extra small device */
+@media screen and (max-width: 413px) {
+  body[class=3D"body-padding"] {
+      padding: 0 !important;
+  }
+  /* HIDE CONTENT ON MOBILE */
+  td[class=3D"mobile-hide-xs"], td[class=3D"mobile-hide-xs comment-gfx"]{
+    display:none;
+  }
+  /* ADJUST BUTTONS ON MOBILE */
+  table[class=3D"mobile-button-container"]{
+      margin:0 auto;
+      width:100% !important;
+  }
+}
+
+/* Android fix */
+div[style*=3D"margin: 16px 0;"] { margin: 0 !important; }
+
+
+/* MARKDOWN RENDERING STYLES */
+.markdown-code {
+    background-color: #EAEAEA;
+}
+
+.markdown-table {
+    border: 1;
+    border-collapse: collapse;
+    border-style: solid;
+    border-width: thin;
+    border-color: #A6A6A6;
+    padding: 8px 10px 10px 10px;
+}
+
+</style>
+</head>
+<body>
+
+
+<div style=3D"display: none; font-size: 1px; max-height: 0px; max-width: 0p=
+x; opacity: 0; overflow: hidden; color: white">
+    vrs-selection-card
+</div>
+
+
+
+<div class=3D"container" style=3D"font-family: 'Segoe UI', '-apple-system',=
+ 'BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; color: #212121; font-=
+size: 14px; background: #f8f8f8">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">
+    <tr>
+        <td class=3D"mobile-hide" style=3D"background-color: white; border-=
+bottom: solid #eaeaea 1px"></td>
+        <td class=3D"content" width=3D"640" style=3D"padding: 0px; max-widt=
+h: 640px; background-color: white; border-bottom: solid #eaeaea 1px">
+            <!--[if (gte mso 9)|(IE)]>=20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"width: 640px; height:0;"><tr><td></td></tr></table>=20
+            <![endif]-->
+           =20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D=
+"100%">
+               =20
+               =20
+<tr>
+    <td style=3D"padding: 20px 24px 25px 24px; background: white">
+        <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"10=
+0%" class=3D"responsive-table">
+            <tr>
+                <td>
+                    <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0"=
+ class=3D"logo" width=3D"100%">
+                        <tr>
+                            <td valign=3D"middle" style=3D"vertical-align: =
+middle">
+                                <img alt=3D"Microsoft" height=3D"16" src=3D=
+"https://cdn.vsassets.io/content/notifications/v3/microsoft.png" width=3D"8=
+0">
+                            </td>
+                                <td valign=3D"middle" style=3D"word-wrap: n=
+one; vertical-align: middle; text-align: right">
+                                    <span style=3D'color: #666666'>Azure</s=
+pan> <span style=3D'color: #0078D4; font-weight: bold'>DevOps</span>
+                                </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+               =20
+               =20
+
+
+
+
+<tr>
+<td class=3D"hero" style=3D"padding: 0px 24px">
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"max-width: 592px" class=3D"responsive-table">
+  <tr>
+    <td>
+      <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0=
+">
+        <tr>
+          <td>
+            <table>
+
+               =20
+                  <tr>
+                    <td class=3D"title" style=3D"padding: 0 0 24px 0; color=
+: #212121; font-size: 28px; font-weight: bold; letter-spacing: -0.04em; lin=
+e-height: 40px; word-break: break-word;">
+                      <div id=3D"alertDescription">
+    Maurantonio Giuseppe added a comment to <a href=3D'https://dev.azure.co=
+m/EconomiaRGS1Collection/ef6df5bb-6fba-4292-8169-cad3780c36e5/_workitems/ed=
+it/110525?tracking_data=3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb=
+24iLCJTSUQiOiIxNzMwNTE1IiwiU1R5cGUiOiJQRVIiLCJSZWNpcCI6MSwiRWxlbWVudCI6InN1=
+bW1hcnlfaWRfbGluayJ9'>Issue&#xA0;110525</a>
+</div>
+                    </td>
+                  </tr>
+             =20
+
+
+              <tr>
+                <td class=3D"message" style=3D"padding: 0 0 24px 0">
+                    <p style=3D"font-family: 'Segoe UI', '-apple-system', '=
+BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; padding: 0px; margin: 0=
+px; font-size: 14px; line-height: 20px; color: #444444; word-break: break-w=
+ord;">vrs-selection-card</p>
+               </td>
+              </tr>
+             =20
+              <tr>
+                <td style=3D"padding: 0 0 24px 0">
+                 =20
+
+
+<table style=3D"position: relative; margin-left: -20px;" border=3D"0" cells=
+pacing=3D"0" cellpadding=3D"0">
+    <tr>
+      <td style=3D"width: 20px;" class=3D"mobile-hide comment-gfx" valign=3D=
+"top">
+      <table border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+          <tr>
+            <td bgcolor=3D"#ffffff" valign=3D"top" style=3D"-webkit-text-si=
+ze-adjust:100%;-ms-text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rsp=
+ace:0pt">
+              <img src=3D"https://cdn.vsassets.io/content/notifications/gfx=
+-comment-8bit-v2.png" width=3D"29" height=3D"26" style=3D"-ms-interpolation=
+-mode:bicubic;border:0;height:auto;line-height:100%;outline:none;text-decor=
+ation:none" />
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td style=3D"padding: 12px; font-family: 'Segoe UI', '-apple-system',=
+ 'BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; background: #f8f8f8; =
+font-size: 14px; line-height: 20px" class=3D"comment">
+                      <pre style=3D"font-family: 'Segoe UI', '-apple-system=
+', 'BlinkMacSystemFont', 'Roboto', 'Arial', sans-serif; background: #f8f8f8=
+; font-size: 14px; line-height: 20px; white-space: pre-wrap" class=3D"comme=
+nt"><div>Chiusa con intervento sul componente vrs-card</div></pre>
+      </td>
+    </tr>
+</table>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td style=3D"padding: 0 0 24px 0">
+                   =20
+
+
+
+<table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+  <tr>
+    <td>
+      <table border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+        <tr>
+             =20
+              <td align=3D"center" bgcolor=3D"#007acc" style=3D"padding: 8p=
+x 12px; border-radius: 2px;">
+                <a href=3D"https://dev.azure.com/EconomiaRGS1Collection/ef6=
+df5bb-6fba-4292-8169-cad3780c36e5/_workitems/edit/110525?tracking_data=3Dey=
+JTb3VyY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiIxNzMwNTE1IiwiU=
+1R5cGUiOiJQRVIiLCJSZWNpcCI6MSwiX3hjaSI6eyJOSUQiOjc2MzU3ODY5MCwiTVJlY2lwIjoi=
+bTA9MSAiLCJBY3QiOiI5NTczOTMzNC1lYWQ4LTRlYmItYmI2NS1kYzFjY2U4NmQzNTEifSwiRWx=
+lbWVudCI6Imhlcm8vY3RhIn0%3d" style=3D"font-weight: 500; font-size: 14px; te=
+xt-decoration: none; padding: 0px; display: inline-block; color: #ffffff" c=
+lass=3D"mobile-button btn-primary">
+                  View work item
+                </a>
+              </td>
+             =20
+             =20
+           =20
+
+
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</td>
+</tr>
+
+            </table>
+        </td>
+        <td class=3D"mobile-hide" style=3D"background-color: white; border-=
+bottom: solid #eaeaea 1px"></td>
+    </tr>
+    <tr>
+        <td class=3D"mobile-hide" style=3D"background: #f8f8f8"></td>
+        <td class=3D"content" width=3D"640" style=3D"padding: 0px; max-widt=
+h: 640px; background: #f8f8f8">
+            <!--[if (gte mso 9)|(IE)]>=20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"width: 640px; height:0;"><tr><td></td></tr></table>=20
+            <![endif]-->
+           =20
+            <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D=
+"100%">           =20
+               =20
+                   =20
+                            <tr>
+                                <td style=3D"padding: 24px 24px 8px 24px; m=
+ax-width: 592px">
+                                       =20
+
+
+
+
+    <table border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" =
+style=3D"vertical-align: middle; background-color: white; box-shadow: 0px 4=
+px 8px #eaeaea" class=3D"responsive-table">
+        <tr>
+            <td style=3D"padding: 16px 24px 24px 24px">
+            <!--[if (gte mso 9)|(IE)]><table width=3D"100%" border=3D"0" ce=
+llpadding=3D"0" cellspacing=3D"0"><tr><td style=3D"padding-left: 0px; width=
+: 100%"><![endif]-->
+
+
+            <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpaddin=
+g=3D"0">
+                <tr>
+                    <td style=3D"font-size: 21px; line-height: 25px; font-w=
+eight: 600; letter-spacing: -0.04em; padding: 0px; width: 100%">
+                           =20
+                                            </td>
+                </tr>
+                <tr>
+                    <td style=3D"padding: 0px; line-height: 20px; max-width=
+: 544px">
+                           =20
+
+
+
+
+
+<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" styl=
+e=3D"-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;mso-table-lspa=
+ce:0pt;mso-table-rspace:0pt;border-collapse:collapse !important;max-width: =
+600px;" class=3D"responsive-table shadow">
+    <tr>
+        <td style=3D"-webkit-text-size-adjust:100%;-ms-text-size-adjust:100=
+%;mso-table-lspace:0pt;mso-table-rspace:0pt">
+            <div class=3D"padding-copy">
+                <table cellpadding=3D"4" border=3D"0" cellspacing=3D"5" cla=
+ss=3D"activity-table" align=3D"left" style=3D"-webkit-text-size-adjust:100%=
+;-ms-text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;displa=
+y:table;border-collapse:collapse !important" id=3D"prioritizedFields">
+                   =20
+                        <tr id=3D"coreFields.System.ChangedBy">
+                            <td class=3D"row-label" style=3D"-webkit-text-s=
+ize-adjust:100%;-ms-text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rs=
+pace:0pt;font-family:Segoe UI, Helvetica, Arial, sans-serif;font-size:14px;=
+color:#333;padding:2px 4px;line-height:16px;text-align:left; text-align: le=
+ft;">
+                                Changed By
+                            </td>
+                            <td class=3D"text-left" style=3D"-webkit-text-s=
+ize-adjust:100%;-ms-text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rs=
+pace:0pt; text-align: left;">
+                                   =20
+                                        <span class=3D"active" style=3D"bac=
+kground:#CEF1DE;font-family:Segoe UI, Helvetica, Arial, sans-serif;font-siz=
+e:14px;color:#333333;padding:2px 4px;background: #CEF1DE;font-family: Segoe=
+ UI, Helvetica, Arial, sans-serif; font-size: 14px; color: #333333; padding=
+: 2px 4px; display: inline-block; border: 1px solid white">
+                                                Maurantonio Giuseppe
+                                        </span>
+                               =20
+                            </td>
+                        </tr>
+                                       =20
+                                                                           =
+                                                                =20
+                   =20
+                                           =20
+                                  =20
+                </table>
+            </div>
+        </td>
+    </tr>
+   =20
+
+    <tr>
+        <td style=3D"-webkit-text-size-adjust:100%;-ms-text-size-adjust:100=
+%;mso-table-lspace:0pt;mso-table-rspace:0pt">
+        <div class=3D"padding-copy">
+            <table cellpadding=3D"4" border=3D"0" cellspacing=3D"5" class=3D=
+"activity-table" align=3D"left" style=3D"-webkit-text-size-adjust:100%;-ms-=
+text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;display:tab=
+le;border-collapse:collapse !important" id=3D"linksAndAttachments">
+            <!--LINKS AND ATTACHMENTS FIELDS SECTION-->
+            <tr>
+                <td>
+
+
+                </td>
+            </tr>
+            </table>
+        </div>
+    </tr>
+
+</table>
+                    </td>
+                </tr>
+            </table>
+
+            <!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]-->
+
+        </td>
+    </tr>
+</table>
+
+                                </td>
+                            </tr>
+                   =20
+
+               =20
+               =20
+
+<tr>
+<td style=3D"padding: 24px 24px 24px 24px" >
+    <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" =
+class=3D"responsive-table">
+        <tr>
+            <td style=3D"color: #666666; font-size: 12px; line-height: 18px=
+;">
+                                           =20
+                                We sent you this notification due to a conf=
+igured subscription.
+                                    <a href=3D"https://dev.azure.com/Econom=
+iaRGS1Collection/_notifications?subscriptionId=3D1730515&publisherId=3Dms.v=
+ss-work.work-event-publisher&tracking_data=3DeyJTb3VyY2UiOiJFbWFpbCIsIlR5cG=
+UiOiJOb3RpZmljYXRpb24iLCJTSUQiOiIxNzMwNTE1IiwiU1R5cGUiOiJQRVIiLCJSZWNpcCI6M=
+SwiX3hjaSI6eyJOSUQiOjc2MzU3ODY5MCwiTVJlY2lwIjoibTA9MSAiLCJBY3QiOiI5NTczOTMz=
+NC1lYWQ4LTRlYmItYmI2NS1kYzFjY2U4NmQzNTEifSwiRWxlbWVudCI6ImZvb3Rlci92aWV3TGl=
+uayJ9">View</a>
+                               =20
+                                    | <a href=3D"https://dev.azure.com/Econ=
+omiaRGS1Collection/_notifications?subscriptionId=3D1730515&publisherId=3Dms=
+.vss-work.work-event-publisher&action=3Dunsubscribe&tracking_data=3DeyJTb3V=
+yY2UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiIxNzMwNTE1IiwiU1R5cG=
+UiOiJQRVIiLCJSZWNpcCI6MSwiX3hjaSI6eyJOSUQiOjc2MzU3ODY5MCwiTVJlY2lwIjoibTA9M=
+SAiLCJBY3QiOiI5NTczOTMzNC1lYWQ4LTRlYmItYmI2NS1kYzFjY2U4NmQzNTEifSwiRWxlbWVu=
+dCI6ImZvb3Rlci91bnN1YnNjcmliZUxpbmsifQ%3d%3d">Unsubscribe</a>
+                           =20
+                   =20
+            </td>
+        </tr>
+            <tr>
+                <td style=3D"padding-top: 4px; color: #666666; font-size: 1=
+2px; line-height: 18px;">
+                    Microsoft respects your privacy. Review our Online Serv=
+ices <a href=3D"https://privacy.microsoft.com/privacystatement">Privacy Sta=
+tement</a>.<br>One Microsoft Way, Redmond, WA, USA 98052.
+                </td>
+            </tr>
+       =20
+            <tr>
+                <td style=3D"padding-top: 4px; color: #666666; font-size: 1=
+2px; line-height: 18px; color: #212121;">
+                        Sent from
+                        Azure <span style=3D'color: #0078D4; font-weight: b=
+old'>DevOps</span>
+                </td>
+            </tr>
+    </table>
+</td>
+</tr>
+
+            </table>
+           =20
+        </td>  =20
+        <td class=3D"mobile-hide" style=3D"background: #f8f8f8"></td>
+    </tr>
+ </table>
+</div>
+
+
+
+   =20
+
+<script type=3D"application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "EmailMessage",
+    "potentialAction": {
+        "@type": "ViewAction",
+        "target": "https://dev.azure.com/EconomiaRGS1Collection/ef6df5bb-6f=
+ba-4292-8169-cad3780c36e5/_workitems/edit/110525?tracking_data=3DeyJTb3VyY2=
+UiOiJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiIxNzMwNTE1IiwiU1R5cGUiO=
+iJQRVIiLCJSZWNpcCI6MSwiX3hjaSI6eyJOSUQiOjc2MzU3ODY5MCwiTVJlY2lwIjoibTA9MSAi=
+LCJBY3QiOiI5NTczOTMzNC1lYWQ4LTRlYmItYmI2NS1kYzFjY2U4NmQzNTEifSwiRWxlbWVudCI=
+6ImNsaWVudEFjdGlvbi9PV0EifQ%3d%3d",
+        "url": "https://dev.azure.com/EconomiaRGS1Collection/ef6df5bb-6fba-=
+4292-8169-cad3780c36e5/_workitems/edit/110525?tracking_data=3DeyJTb3VyY2UiO=
+iJFbWFpbCIsIlR5cGUiOiJOb3RpZmljYXRpb24iLCJTSUQiOiIxNzMwNTE1IiwiU1R5cGUiOiJQ=
+RVIiLCJSZWNpcCI6MSwiX3hjaSI6eyJOSUQiOjc2MzU3ODY5MCwiTVJlY2lwIjoibTA9MSAiLCJ=
+BY3QiOiI5NTczOTMzNC1lYWQ4LTRlYmItYmI2NS1kYzFjY2U4NmQzNTEifSwiRWxlbWVudCI6Im=
+NsaWVudEFjdGlvbi9Ob25PV0EifQ%3d%3d",
+        "name": "View work item"
+    },
+    "description": "View work item"
+}
+</script>
+
+
+</body>
+</html>
+<!-- cV: SoK+lWBkwUCoBOpO.3.1.1.4 -->=
+

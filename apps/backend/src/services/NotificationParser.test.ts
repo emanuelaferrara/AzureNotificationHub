@@ -56,6 +56,32 @@ const EXPECTATIONS: Expectation[] = [
   { file: "pr build failed.eml", category: "build", action: "failed", buildContext: "pr-build" },
   { file: "pr build canceled.eml", category: "build", action: "canceled", buildContext: "pr-build" },
   { file: "issue mentioned you.eml", category: "mention", action: "mentioned", initiator: "CORPINO PAOLO" },
+  { file: "push.eml", category: "push", action: "pushed", initiator: "DANIELE MARCO" },
+  { file: "approval pending.eml", category: "approval", action: "pending" },
+  {
+    file: "work item state changed.eml",
+    category: "work-item",
+    action: "state-changed",
+    initiator: "DE MARCO RENATO",
+  },
+  {
+    file: "work item commented.eml",
+    category: "work-item",
+    action: "commented",
+    initiator: "Maurantonio Giuseppe",
+  },
+  {
+    file: "work item board column changed.eml",
+    category: "work-item",
+    action: "board-column-changed",
+    initiator: "Maurantonio Giuseppe",
+  },
+  {
+    file: "work item linked.eml",
+    category: "work-item",
+    action: "linked",
+    initiator: "Maurantonio Giuseppe",
+  },
 ];
 
 describe("parseNotificationEmail", () => {
