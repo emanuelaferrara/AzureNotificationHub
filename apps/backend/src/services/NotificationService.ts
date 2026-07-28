@@ -44,7 +44,7 @@ export class NotificationService {
     clients.forEach((client) => {
       notifications.forEach((notification) => {
         client.send(JSON.stringify(notification), (error) => {
-          console.log("notify", { notification, error });
+          //console.log("notify", { notification, error });
         });
       });
     });

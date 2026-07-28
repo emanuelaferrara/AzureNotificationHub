@@ -13,7 +13,7 @@ import {
   DISMISS_ACTION_IDENTIFIER,
   type NotificationResponse,
 } from 'react-native-mac-notifications';
-import { Notification } from './features/notifications/types/Notification';
+import type { Notification as AppNotification } from './features/notifications/types/Notification';
 
 // Shape of a notification pushed by the backend over the WebSocket. Mirrors the
 // backend's NotificationPayload (only the fields this demo touches are typed).
@@ -22,10 +22,12 @@ type IncomingNotification = {
   title: string;
   body: string;
   url?: string;
+  createdAt: string;
+  read: boolean;
 };
 
 export default function App() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
 
   useEffect(() => {
     // Ensure Azure DevOps relay subscriptions exist (idempotent, fire-and-forget).
@@ -88,11 +90,13 @@ export default function App() {
         console.log('New message received:', event);
 
         if (granted) {
-          const notification: Notification = {
+          const notification: AppNotification = {
             id: incoming.id,
             title: incoming.title,
             body: incoming.body,
             url: incoming.url,
+            createdAt: incoming.createdAt,
+            read: incoming.read
           };
           notify({
             title: notification.title,

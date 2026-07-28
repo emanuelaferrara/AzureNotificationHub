@@ -166,7 +166,10 @@ function parseScope(scope: string | undefined): { org?: string; project?: string
   return { org, project, repo };
 }
 
-export async function parseNotificationEmail(source: Buffer): Promise<NotificationPayload> {
+export async function parseNotificationEmail(
+  source: Buffer,
+  read: boolean = false,
+): Promise<NotificationPayload> {
   const parsed = await simpleParser(source);
 
   const eventType = stringHeader(parsed.headers, "x-vss-event-type");
@@ -210,7 +213,7 @@ export async function parseNotificationEmail(source: Buffer): Promise<Notificati
     category,
     url: extractUrl(parsed.html),
     createdAt: (parsed.date ?? new Date()).toISOString(),
-    read: false,
+    read,
     metadata: { org, project, repo, initiator, action, buildContext, trigger },
   };
 }

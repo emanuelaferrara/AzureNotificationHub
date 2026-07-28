@@ -1,14 +1,17 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/AppText';
-import { Notification } from '../types/Notification';
+import type { Notification as NotificationItem } from '../types/Notification';
 import { useAppTheme } from '../../../theme/useAppTheme';
 import { NotificationDot } from './NotificationDot';
+import { formatNotificationDate } from '../utils/formatNotificationDate';
 
 export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
   notification,
 }) => {
   const theme = useAppTheme();
+  const formattedCreatedAt = formatNotificationDate(notification.createdAt);
+
   return (
     <View
       style={[
@@ -46,7 +49,7 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
               },
             ]}
           >
-            {notification.createdAt}
+            {formattedCreatedAt}
           </AppText>
         </View>
 
@@ -67,7 +70,7 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
 };
 
 export type NotificationItemViewProps = {
-  notification: Notification;
+  notification: NotificationItem;
 };
 
 const styles = StyleSheet.create({

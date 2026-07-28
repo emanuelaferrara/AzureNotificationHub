@@ -24,7 +24,7 @@ export type Notification = {
   body: string;
   // category: NotificationCategory;
   url?: string;
-  // createdAt: string;
-  // read: boolean;
+  createdAt: string;
+  read: boolean;
   // metadata: NotificationMetadata;
 };

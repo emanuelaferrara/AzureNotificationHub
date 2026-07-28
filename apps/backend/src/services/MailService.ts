@@ -1,10 +1,16 @@
 import { ImapFlow, type FetchMessageObject } from "imapflow";
 import { parseNotificationEmail, type NotificationPayload } from "./NotificationParser.ts";
 
+export function isMessageRead(flags?: Iterable<string> | null): boolean {
+  return Array.from(flags ?? []).some((flag) => flag === "\\Seen" || flag === "\\SEEN");
+}
+
 async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> {
+  const read = isMessageRead(msg.flags);
+  console.log('Payload flags: ', msg.flags);
   if (msg.source) {
     try {
-      return await parseNotificationEmail(msg.source);
+      return await parseNotificationEmail(msg.source, read);
     } catch (error) {
       console.error("failed to parse notification email, falling back to subject only", error);
     }
@@ -17,7 +23,7 @@ async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> 
     body: title,
     category: "unknown",
     createdAt: (msg.envelope?.date ?? new Date()).toISOString(),
-    read: false,
+    read,
     metadata: { action: "unknown" },
   };
 }
@@ -71,6 +77,7 @@ export class MailService {
           let newMessages = await this.client.fetchAll(`${lastCount + 1}:*`, {
             envelope: true,
             source: true,
+            flags: true,
           });
           const notifications = await Promise.all(
             // if (msg.envelope?.sender?.at(0)?.address === this.sender)
@@ -101,6 +108,7 @@ export class MailService {
     const newMessages = await this.client.fetchAll("1:*", {
       envelope: true,
       source: true,
+      flags: true,
     });
 
     return Promise.all(
