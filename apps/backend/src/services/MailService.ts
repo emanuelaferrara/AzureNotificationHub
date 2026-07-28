@@ -7,7 +7,6 @@ export function isMessageRead(flags?: Iterable<string> | null): boolean {
 
 async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> {
   const read = isMessageRead(msg.flags);
-  console.log('Payload flags: ', msg.flags);
   if (msg.source) {
     try {
       return await parseNotificationEmail(msg.source, read);

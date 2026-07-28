@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../theme/useAppTheme';
-import { EmptyNotifications } from '../components/NoNotificationsState';
+import { EmptyNotificationsView } from '../components/EmptyNotificationsView';
 import { NotificationItemView } from '../components/NotificationItemView';
 import { NotificationsContext } from '../context/NotificationsContext';
 import { sortNotificationsByDateDesc } from '../utils/sortNotifications';
@@ -21,7 +21,7 @@ export const NotificationListScreen: React.FC = () => {
         data={sortedNotifications}
         keyExtractor={item => item.id}
         contentContainerStyle={sortedNotifications.length === 0 ? styles.emptyContent : undefined}
-        ListEmptyComponent={<EmptyNotifications />}
+        ListEmptyComponent={<EmptyNotificationsView />}
         renderItem={({ item }) => <NotificationItemView notification={item} />}
       />
     </View>

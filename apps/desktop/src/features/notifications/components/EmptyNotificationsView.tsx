@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/AppText';
 import { useAppTheme } from '../../../theme/useAppTheme';
 
-export const EmptyNotifications: React.FC = () => {
+export const EmptyNotificationsView: React.FC = () => {
   const theme = useAppTheme();
 
   return (

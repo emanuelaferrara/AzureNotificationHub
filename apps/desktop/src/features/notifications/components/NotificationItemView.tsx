@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Linking, Pressable } from 'react-native';
 import { AppText } from '../../../components/AppText';
 import type { Notification as NotificationItem } from '../types/Notification';
 import { useAppTheme } from '../../../theme/useAppTheme';
@@ -11,15 +11,43 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
 }) => {
   const theme = useAppTheme();
   const formattedCreatedAt = formatNotificationDate(notification.createdAt);
+  const hasUrl = Boolean(notification.url);
+  const [hovered, setHovered] = useState(false);
+
+  const cardBackgroundColor = notification.read
+    ? theme.card
+    : 'rgba(77, 163, 255, 0.09)';
+
+  const cardBorderColor = notification.read ? theme.border : theme.accent;
+  const titleColor = notification.read ? theme.textPrimary : theme.accent;
+
+  const handlePress = () => {
+    if (!hasUrl) return;
+    Linking.openURL(notification.url!).catch(error => {
+      console.error('Failed to open notification URL:', error);
+    });
+  };
 
   return (
-    <View
-      style={[
+    <Pressable
+      onPress={handlePress}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
+      style={({ pressed }) => [
         styles.card,
         styles.container,
         {
-          backgroundColor: theme.card,
-          borderColor: theme.border,
+          backgroundColor: pressed
+            ? notification.read
+              ? theme.card
+              : 'rgba(77, 163, 255, 0.14)'
+            : hovered
+            ? notification.read
+              ? '#f2f2f2'
+              : 'rgba(77, 163, 255, 0.16)'
+            : cardBackgroundColor,
+          borderColor: cardBorderColor,
+          opacity: pressed ? 0.94 : 1,
         },
       ]}
     >
@@ -65,7 +93,7 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
           {notification.body}
         </AppText>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
