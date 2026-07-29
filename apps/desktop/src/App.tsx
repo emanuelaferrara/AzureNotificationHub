@@ -3,7 +3,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NotificationListScreen } from './features/notifications/screens/NotificationListScreen';
 import { useEffect, useState } from 'react';
 import { setSubscriptions } from './services/azure/AzureService';
-import { NotificationsContext } from './features/notifications/context/NotificationsContext';
+import { NotificationsContext, NotificationState } from './features/notifications/context/NotificationsContext';
 import {
   notify,
   requestPermission,
@@ -27,23 +27,47 @@ type IncomingNotification = {
 };
 
 export default function App() {
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [state, setState] = useState<NotificationState>({
+    notifications: {}, list: []
+  });
 
   useEffect(() => {
     // Ensure Azure DevOps relay subscriptions exist (idempotent, fire-and-forget).
     setSubscriptions();
+
+    // --- Incoming notifications over the WebSocket -----------------------
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      console.log('Connected!');
+    };
 
     // --- Notification interaction handling -------------------------------
     // The package tells us WHICH notification was interacted with (via the
     // opaque `userInfo` we attached in notify()) and HOW (actionIdentifier:
     // clicked vs dismissed). Deciding what to do is app logic and lives here.
     const handleResponse = (response: NotificationResponse) => {
-      const id = response.userInfo?.id;
+      const id = response.userInfo?.id as string;
       const url = response.userInfo?.url;
 
       if (response.actionIdentifier === DISMISS_ACTION_IDENTIFIER) {
         console.log('Notification dismissed', { id, response });
         // your code here — e.g. notificationStore.markSeen(id);
+
+        socket.send(JSON.stringify({ type: 'read', id }));
+        setState(state => {
+          return {
+            ...state,
+            notifications: {
+              ...state.notifications,
+              [id]: {
+                ...state.notifications[id],
+                read: true
+              }
+            }
+          };
+        });
+
         return;
       }
 
@@ -53,6 +77,20 @@ export default function App() {
       if (typeof url === 'string' && url.length > 0) {
         Linking.openURL(url).catch(error => {
           console.error('Failed to open URL:', url, error);
+        });
+
+        socket.send(JSON.stringify({ type: 'read', id }));
+                setState(state => {
+          return {
+            ...state,
+            notifications: {
+              ...state.notifications,
+              [id]: {
+                ...state.notifications[id],
+                read: true
+              }
+            }
+          };
         });
       }
       // your code here — e.g. notificationStore.markRead(id), or navigate to a
@@ -76,18 +114,10 @@ export default function App() {
     // Warm: clicks while the app is already running.
     const unsubscribe = addNotificationResponseListener(handleResponse);
 
-    // --- Incoming notifications over the WebSocket -----------------------
-    const socket = new WebSocket('ws://localhost:8080');
-
-    socket.onopen = () => {
-      console.log('Connected!');
-    };
-
     const setup = async () => {
       const granted = await requestPermission();
       socket.onmessage = event => {
         const incoming = JSON.parse(event.data) as IncomingNotification;
-        console.log('New message received:', event);
 
         if (granted) {
           const notification: AppNotification = {
@@ -98,6 +128,7 @@ export default function App() {
             createdAt: incoming.createdAt,
             read: incoming.read
           };
+
           notify({
             title: notification.title,
             body: notification.body,
@@ -105,8 +136,12 @@ export default function App() {
           }).catch(error => {
             console.error('Error showing notification:', error);
           });
-          setNotifications(notifications => [...notifications, notification]);
-          console.log('setNotifications: ', notifications);
+
+          setState(state => ({
+            ...state,
+            notifications: { ...state.notifications, [notification.id]: notification },
+            list: [...state.list, notification.id]
+          }));
         }
       };
     };
@@ -121,7 +156,7 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <NotificationsContext.Provider
-          value={{ notifications, setNotifications }}
+          value={{ state, setState }}
         >
           <StatusBar barStyle="light-content" />
           <NotificationListScreen />

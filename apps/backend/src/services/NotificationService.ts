@@ -4,9 +4,11 @@ import type { NotificationPayload } from "./NotificationParser.ts";
 export class NotificationService {
   wss: Server | undefined;
   fullDump: (notify: (notifications: NotificationPayload[]) => void) => void;
+  onRead: (id: string) => void;
 
-  constructor(fullDump: (notify: (notifications: NotificationPayload[]) => void) => void) {
+  constructor(fullDump: (notify: (notifications: NotificationPayload[]) => void) => void, onRead: (id: string) => void) {
     this.fullDump = fullDump;
+    this.onRead = onRead;
   }
 
   init() {
@@ -27,7 +29,15 @@ export class NotificationService {
         console.log("Client disconnected");
         console.log({ code, reason });
       });
+
+    ws.on('message', (rawData) => {
+      //@ts-expect-error
+      const data = JSON.parse(rawData) as {id: string;};
+
+      this.onRead(data.id);
+    })
     });
+
   }
 
   notify = (notifications: NotificationPayload[]): void => {

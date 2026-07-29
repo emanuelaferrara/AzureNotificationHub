@@ -8,21 +8,22 @@ import { sortNotificationsByDateDesc } from '../utils/sortNotifications';
 
 export const NotificationListScreen: React.FC = () => {
   const theme = useAppTheme();
-  const notificationsState = useContext(NotificationsContext);
-  const notifications = notificationsState?.notifications ?? [];
+  const constexState = useContext(NotificationsContext);
 
-  const sortedNotifications = useMemo(() => {
-    return [...notifications].sort(sortNotificationsByDateDesc);
-  }, [notifications]);
+  const notificationState = constexState?.state ?? {list: [], notifications: {}};
+
+  const sortedNotifications = useMemo(() => 
+      sortNotificationsByDateDesc(notificationState)
+  , [notificationState]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }] }>
       <FlatList
         data={sortedNotifications}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item}
         contentContainerStyle={sortedNotifications.length === 0 ? styles.emptyContent : undefined}
         ListEmptyComponent={<EmptyNotificationsView />}
-        renderItem={({ item }) => <NotificationItemView notification={item} />}
+        renderItem={({ item }) => <NotificationItemView notification={notificationState.notifications[item]} />}
       />
     </View>
   );

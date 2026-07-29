@@ -9,7 +9,7 @@ async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> 
   const read = isMessageRead(msg.flags);
   if (msg.source) {
     try {
-      return await parseNotificationEmail(msg.source, read);
+      return await parseNotificationEmail(msg.source, read, String(msg.uid));
     } catch (error) {
       console.error("failed to parse notification email, falling back to subject only", error);
     }
@@ -17,7 +17,8 @@ async function toPayload(msg: FetchMessageObject): Promise<NotificationPayload> 
 
   const title = msg.envelope?.subject ?? "subject empty";
   return {
-    id: msg.envelope?.messageId ?? String(msg.uid),
+    // id: msg.envelope?.messageId ?? String(msg.uid),
+    id: String(msg.uid),
     title,
     body: title,
     category: "unknown",
@@ -100,7 +101,16 @@ export class MailService {
   }
 
   async markSeen(uid: string) {
-    await this.client.messageFlagsAdd(uid, ["\\Seen"], { uid: true });
+    try {
+      console.log("marking seen",uid);
+
+      const result = await this.client.messageFlagsAdd(uid, ["\\Seen"], { uid: true });
+
+      console.log("result",result)
+    }
+    catch(error) {
+      console.log("mark seen error: ", error)
+    }
   }
 
   async fetchAll(): Promise<NotificationPayload[]> {

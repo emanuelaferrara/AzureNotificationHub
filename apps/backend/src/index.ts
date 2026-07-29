@@ -16,7 +16,11 @@ function fullDump(notify: (notifications: NotificationPayload[]) => void) {
   mailService.fetchAll().then(notify);
 }
 
-notificationService = new NotificationService(fullDump)
+function onRead(id: string): void {
+  mailService.markSeen(id);
+}
+
+notificationService = new NotificationService(fullDump, onRead);
 mailService = new MailService(Configs.EMAIL, Configs.PASSWORD, SENDER_TO_NOTIFY, notify);
 
 

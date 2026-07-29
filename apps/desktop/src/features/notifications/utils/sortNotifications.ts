@@ -1,6 +1,13 @@
+import { NotificationState } from '../context/NotificationsContext';
 import type { Notification } from '../types/Notification';
 
-export const sortNotificationsByDateDesc = (
+export const sortNotificationsByDateDesc = (state: NotificationState) => {
+  const {list,notifications} = state;
+
+  return [...list].sort((a,b) => _sortNotificationsByDateDesc(notifications[a],notifications[b]))
+}
+
+const _sortNotificationsByDateDesc = (
   a: Notification,
   b: Notification,
 ): number => {

@@ -169,6 +169,7 @@ function parseScope(scope: string | undefined): { org?: string; project?: string
 export async function parseNotificationEmail(
   source: Buffer,
   read: boolean = false,
+  uid: string,
 ): Promise<NotificationPayload> {
   const parsed = await simpleParser(source);
 
@@ -204,7 +205,7 @@ export async function parseNotificationEmail(
   const title = (parsed.subject ?? "").replace(/^\[EXTERNAL\]\s*/, "");
   const body = buildBody(category, action, initiator, title);
 
-  const id = parsed.messageId?.replace(/^<|>$/g, "") ?? crypto.randomUUID();
+  const id = uid;//parsed.messageId?.replace(/^<|>$/g, "") ?? crypto.randomUUID();
 
   return {
     id,
