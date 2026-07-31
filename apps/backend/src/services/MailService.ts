@@ -63,6 +63,7 @@ export class MailService {
     await this.client.connect();
 
     const lock = await this.client.getMailboxLock("INBOX");
+
     try {
       if (!this.client.mailbox) {
         return;
