@@ -7,16 +7,19 @@ describe('formatNotificationDate', () => {
     expect(parsed).toEqual(new Date('2026-07-28T14:54:55.000Z'));
   });
 
-  it('formats ISO timestamps for the notification list', () => {
+  it('formats older dates in a compact form', () => {
     expect(formatNotificationDate('2026-07-28T14:54:55.000Z', 'UTC')).toBe(
-      '28/07/2026, 14:54',
+      '28 Jul',
     );
   });
 
-  it('uses the provided timezone when formatting dates', () => {
-    expect(formatNotificationDate('2026-07-28T15:04:44.000Z', 'Europe/Rome')).toBe(
-      '28/07/2026, 17:04',
-    );
+  it('shows only the time for notifications from today', () => {
+    const today = new Date();
+    const todayIso = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 14, 30),
+    ).toISOString();
+
+    expect(formatNotificationDate(todayIso, 'UTC')).toBe('14:30');
   });
 
   it('returns a fallback for invalid dates', () => {

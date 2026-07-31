@@ -6,7 +6,7 @@ type NotificationDotProps = {
 };
 
 export const NotificationDot: React.FC<NotificationDotProps> = ({
-  size = 12,
+  size = 6,
 }) => {
   return (
     <View

@@ -112,13 +112,19 @@ export class MailService {
       console.log("mark seen error: ", error)
     }
   }
+  
+async fetchAll(): Promise<NotificationPayload[]> {
+    if(!this.client.mailbox) {
+      throw new Error("no valid mailbox");
+    }
 
-  async fetchAll(): Promise<NotificationPayload[]> {
-    const newMessages = await this.client.fetchAll("1:*", {
+    const newMessages = await this.client.fetchAll(`${Math.max(1, this.client.mailbox.exists - 50)}:*`, {
       envelope: true,
       source: true,
-      flags: true,
+      flags: true
     });
+
+    console.log({newMessages});
 
     return Promise.all(
       // .filter((msg) => msg.envelope?.sender?.at(0)?.address === this.sender)

@@ -1,33 +1,49 @@
 export const lightTheme = {
-  background: '#F5F5F5',
+  background: '#F4F5F7',
 
-  card: '#FFFFFF',
+  card: '#FCFCFD',
 
-  border: '#E5E5E5',
+  cardUnread: '#EAF3FF',
 
-  textPrimary: '#111111',
+  cardHovered: '#c6e3ff',
 
-  textSecondary: '#555555',
+  cardUnreadHovered: '#f3f3f3',
 
-  textTertiary: '#888888',
+  border: '#E3E7EC',
 
-  accent: '#4DA3FF',
+  textPrimary: '#171A1F',
+
+  textSecondary: '#5E6470',
+
+  textTertiary: '#8A909A',
+
+  accent: '#5DA6F2',
+
+  separator: '#D9E1EA'
 };
 
 export type Theme = typeof lightTheme;
 
 export const darkTheme: Theme = {
-  background: '#111111',
+  background: '#121417',
 
-  card: '#1A1A1A',
+  card: '#181C22',
 
-  border: '#2A2A2A',
+  cardUnread: '#1F2D3D',
 
-  textPrimary: '#FFFFFF',
+  cardHovered: '#202631',
 
-  textSecondary: '#B0B0B0',
+  cardUnreadHovered: '#233647',
 
-  textTertiary: '#888888',
+  border: '#2A3038',
 
-  accent: '#4DA3FF',
+  textPrimary: '#F5F7FA',
+
+  textSecondary: '#B8C0CC',
+
+  textTertiary: '#7E8793',
+
+  accent: '#5DA6F2',
+
+  separator: '#2D3440'
 };

@@ -14,16 +14,36 @@ export const formatNotificationDate = (
   const parsedDate = parseNotificationDate(value);
 
   if (!parsedDate) {
-    return 'Date not available';
+    return 'Data non disponibile';
   }
 
-  return new Intl.DateTimeFormat('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
+    month: 'short',
+    day: '2-digit',
+    ...(timeZone ? { timeZone } : {}),
+  });
+  const nowParts = formatter.formatToParts(now);
+  const parsedParts = formatter.formatToParts(parsedDate);
+
+  const nowDateKey = `${nowParts.find((part) => part.type === 'year')?.value}-${nowParts.find((part) => part.type === 'month')?.value}-${nowParts.find((part) => part.type === 'day')?.value}`;
+  const parsedDateKey = `${parsedParts.find((part) => part.type === 'year')?.value}-${parsedParts.find((part) => part.type === 'month')?.value}-${parsedParts.find((part) => part.type === 'day')?.value}`;
+
+  const isSameDay = nowDateKey === parsedDateKey;
+
+  if (isSameDay) {
+    return new Intl.DateTimeFormat('it-IT', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      ...(timeZone ? { timeZone } : {}),
+    }).format(parsedDate);
+  }
+
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
     ...(timeZone ? { timeZone } : {}),
   }).format(parsedDate);
 };

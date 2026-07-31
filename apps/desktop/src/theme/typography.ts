@@ -5,7 +5,7 @@ import { Platform, TextStyle } from 'react-native';
 export const typography = {
   headline: Platform.select<TextStyle>({
     macos: {
-      fontSize: 17,
+      fontSize: 14,
       fontWeight: '600',
       lineHeight: 22,
     },
@@ -23,7 +23,7 @@ export const typography = {
 
   body: Platform.select<TextStyle>({
     macos: {
-      fontSize: 17,
+      fontSize: 12,
       fontWeight: '400',
       lineHeight: 22,
     },
