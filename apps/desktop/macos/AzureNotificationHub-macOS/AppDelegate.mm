@@ -3,9 +3,8 @@
 #import <React/RCTBundleURLProvider.h>
 #import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>
 
-// Short label shown in the menu bar. Swap for a template NSImage/SF Symbol here
-// if you ever want a glyph instead of text.
-static NSString *const kStatusItemTitle = @"ANH";
+// Icon shown in the menu bar. You can swap this symbol with another SF Symbol.
+static NSString *const kStatusItemSymbolName = @"cloud.fill";
 static const CGFloat kPopoverWidth = 380;
 static const CGFloat kPopoverHeight = 520;
 
@@ -42,7 +41,12 @@ static const CGFloat kPopoverHeight = 520;
 {
   self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
   NSStatusBarButton *button = self.statusItem.button;
-  button.title = kStatusItemTitle;
+
+  NSImage *icon = [NSImage imageWithSystemSymbolName:kStatusItemSymbolName
+                                              accessibilityDescription:@"Notifications"];
+  icon.size = NSMakeSize(16, 16);
+  button.image = icon;
+  button.imagePosition = NSImageLeft;
   button.target = self;
   button.action = @selector(statusItemClicked:);
   // Receive both mouse-up kinds so we can tell a left click (toggle popover)
