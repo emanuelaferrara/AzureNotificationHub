@@ -3,7 +3,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NotificationListScreen } from './features/notifications/screens/NotificationListScreen';
 import { useEffect, useState } from 'react';
 import { setSubscriptions } from './services/azure/AzureService';
-import { NotificationsContext, NotificationState } from './features/notifications/context/NotificationsContext';
+import {
+  NotificationsContext,
+  NotificationState,
+} from './features/notifications/context/NotificationsContext';
 import {
   notify,
   requestPermission,
@@ -28,7 +31,8 @@ type IncomingNotification = {
 
 export default function App() {
   const [state, setState] = useState<NotificationState>({
-    notifications: {}, list: []
+    notifications: {},
+    list: [],
   });
 
   useEffect(() => {
@@ -62,9 +66,9 @@ export default function App() {
               ...state.notifications,
               [id]: {
                 ...state.notifications[id],
-                read: true
-              }
-            }
+                read: true,
+              },
+            },
           };
         });
 
@@ -80,16 +84,16 @@ export default function App() {
         });
 
         socket.send(JSON.stringify({ type: 'read', id }));
-                setState(state => {
+        setState(state => {
           return {
             ...state,
             notifications: {
               ...state.notifications,
               [id]: {
                 ...state.notifications[id],
-                read: true
-              }
-            }
+                read: true,
+              },
+            },
           };
         });
       }
@@ -126,21 +130,26 @@ export default function App() {
             body: incoming.body,
             url: incoming.url,
             createdAt: incoming.createdAt,
-            read: incoming.read
+            read: incoming.read,
           };
 
-          notify({
-            title: notification.title,
-            body: notification.body,
-            userInfo: { id: notification.id, url: notification.url },
-          }).catch(error => {
-            console.error('Error showing notification:', error);
-          });
+          if (!incoming.read) {
+            notify({
+              title: notification.title,
+              body: notification.body,
+              userInfo: { id: notification.id, url: notification.url },
+            }).catch(error => {
+              console.error('Error showing notification:', error);
+            });
+          }
 
           setState(state => ({
             ...state,
-            notifications: { ...state.notifications, [notification.id]: notification },
-            list: [...state.list, notification.id]
+            notifications: {
+              ...state.notifications,
+              [notification.id]: notification,
+            },
+            list: [...state.list, notification.id],
           }));
         }
       };
@@ -155,9 +164,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <NotificationsContext.Provider
-          value={{ state, setState }}
-        >
+        <NotificationsContext.Provider value={{ state, setState }}>
           <StatusBar barStyle="light-content" />
           <NotificationListScreen />
         </NotificationsContext.Provider>

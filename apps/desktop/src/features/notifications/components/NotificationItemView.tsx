@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   },
 
   trailingIconContainer: {
-     padding: 12
+    marginTop: 8,
+     marginHorizontal: 12
   },
 
   title: {
