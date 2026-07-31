@@ -125,8 +125,6 @@ async fetchAll(): Promise<NotificationPayload[]> {
       flags: true
     });
 
-    console.log({newMessages});
-
     return Promise.all(
       // .filter((msg) => msg.envelope?.sender?.at(0)?.address === this.sender)
       newMessages.map((msg) => toPayload(msg)),
