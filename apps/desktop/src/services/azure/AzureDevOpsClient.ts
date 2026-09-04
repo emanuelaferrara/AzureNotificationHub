@@ -4,6 +4,7 @@ import type {
   NotificationSubscriptionTemplate,
   NotificationSubscriptionUpdateParameters,
 } from 'azure-devops-node-api/interfaces/NotificationInterfaces';
+import type { GitRepository } from 'azure-devops-node-api/interfaces/GitInterfaces';
 
 export type AzureDevOpsClientOptions = {
   /** Organization URL, e.g. 'https://dev.azure.com/MyOrg/' (trailing slash optional). */
@@ -46,7 +47,10 @@ export class AzureDevOpsClient {
     if (!res.ok) {
       const body = await res.text().catch(() => '');
       throw new Error(
-        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${body.slice(0, 200)}`,
+        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${body.slice(
+          0,
+          200,
+        )}`,
       );
     }
     return (await res.json()) as T;
@@ -72,7 +76,9 @@ export class AzureDevOpsClient {
     if (!res.ok) {
       const errBody = await res.text().catch(() => '');
       throw new Error(
-        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${errBody.slice(0, 200)}`,
+        `Azure DevOps ${res.status} ${
+          res.statusText
+        } for ${path}: ${errBody.slice(0, 200)}`,
       );
     }
     return (await res.json()) as TResponse;
@@ -98,7 +104,9 @@ export class AzureDevOpsClient {
     if (!res.ok) {
       const errBody = await res.text().catch(() => '');
       throw new Error(
-        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${errBody.slice(0, 200)}`,
+        `Azure DevOps ${res.status} ${
+          res.statusText
+        } for ${path}: ${errBody.slice(0, 200)}`,
       );
     }
     return (await res.json()) as TResponse;
@@ -113,8 +121,19 @@ export class AzureDevOpsClient {
     return value;
   }
 
+  /** List Git repositories across all projects visible to the token's user. */
+  async listRepositories(): Promise<GitRepository[]> {
+    const { value } = await this.getJson<AzureList<GitRepository>>(
+      '_apis/git/repositories',
+      '7.1',
+    );
+    return value;
+  }
+
   /** List the subscription templates (the catalogue of subscribable event types). */
-  async getSubscriptionTemplates(): Promise<NotificationSubscriptionTemplate[]> {
+  async getSubscriptionTemplates(): Promise<
+    NotificationSubscriptionTemplate[]
+  > {
     const { value } = await this.getJson<
       AzureList<NotificationSubscriptionTemplate>
     >('_apis/notification/subscriptiontemplates', '7.1-preview.1');
@@ -164,10 +183,15 @@ function encodeBase64(input: string): string {
     const b3 = i + 2 < input.length ? input.charCodeAt(i + 2) : NaN;
     const e1 = b1 >> 2;
     const e2 = ((b1 & 3) << 4) | (Number.isNaN(b2) ? 0 : b2 >> 4);
-    const e3 = Number.isNaN(b2) ? 64 : ((b2 & 15) << 2) | (Number.isNaN(b3) ? 0 : b3 >> 6);
+    const e3 = Number.isNaN(b2)
+      ? 64
+      : ((b2 & 15) << 2) | (Number.isNaN(b3) ? 0 : b3 >> 6);
     const e4 = Number.isNaN(b3) ? 64 : b3 & 63;
     output +=
-      chars[e1] + chars[e2] + (e3 === 64 ? '=' : chars[e3]) + (e4 === 64 ? '=' : chars[e4]);
+      chars[e1] +
+      chars[e2] +
+      (e3 === 64 ? '=' : chars[e3]) +
+      (e4 === 64 ? '=' : chars[e4]);
   }
   return output;
 }

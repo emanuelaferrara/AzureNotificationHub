@@ -18,6 +18,7 @@ import { useAppTheme } from '../../../theme/useAppTheme';
 
 type Props = {
   onClose: () => void;
+  onOpenRepositories: () => void;
 };
 
 const CATEGORY_ORDER = [
@@ -30,7 +31,10 @@ const CATEGORY_ORDER = [
   'Other',
 ];
 
-export const SubscriptionSettingsScreen: React.FC<Props> = ({ onClose }) => {
+export const SubscriptionSettingsScreen: React.FC<Props> = ({
+  onClose,
+  onOpenRepositories,
+}) => {
   const theme = useAppTheme();
   const [subscriptions, setSubscriptions] = useState<RelaySubscription[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,6 +148,29 @@ export const SubscriptionSettingsScreen: React.FC<Props> = ({ onClose }) => {
         </View>
       </View>
 
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Choose repositories"
+        onPress={onOpenRepositories}
+        style={({ pressed }) => [
+          styles.repositoryLink,
+          { backgroundColor: theme.card, opacity: pressed ? 0.7 : 1 },
+        ]}
+      >
+        <View style={styles.rowText}>
+          <AppText variant="headline" style={{ color: theme.textPrimary }}>
+            Repositories
+          </AppText>
+          <AppText variant="caption" style={{ color: theme.textSecondary }}>
+            Choose repositories for Git notifications
+          </AppText>
+        </View>
+        <AppText variant="headline" style={{ color: theme.textTertiary }}>
+          ›
+        </AppText>
+      </Pressable>
+      <Divider />
+
       {error && (
         <View style={[styles.error, { backgroundColor: theme.cardUnread }]}>
           <AppText variant="body" style={{ color: theme.textPrimary }}>
@@ -248,6 +275,7 @@ const styles = StyleSheet.create({
   centered: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   loadingText: { marginTop: 8 },
   sectionHeader: { paddingHorizontal: 16, paddingVertical: 8 },
+  repositoryLink: { flexDirection: 'row', alignItems: 'center', padding: 16 },
   row: { flexDirection: 'row', alignItems: 'center', padding: 16 },
   rowText: { flex: 1, paddingEnd: 16 },
 });

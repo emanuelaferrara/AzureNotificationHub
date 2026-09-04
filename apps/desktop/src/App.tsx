@@ -18,6 +18,7 @@ import {
 } from 'react-native-mac-notifications';
 import type { Notification as AppNotification } from './features/notifications/types/Notification';
 import { SubscriptionSettingsScreen } from './features/settings/screens/SubscriptionSettingsScreen';
+import { RepositorySettingsScreen } from './features/settings/screens/RepositorySettingsScreen';
 
 // Shape of a notification pushed by the backend over the WebSocket. Mirrors the
 // backend's NotificationPayload (only the fields this demo touches are typed).
@@ -31,7 +32,9 @@ type IncomingNotification = {
 };
 
 export default function App() {
-  const [screen, setScreen] = useState<'notifications' | 'settings'>('notifications');
+  const [screen, setScreen] = useState<
+    'notifications' | 'settings' | 'repositories'
+  >('notifications');
   const [state, setState] = useState<NotificationState>({
     notifications: {},
     list: [],
@@ -169,9 +172,16 @@ export default function App() {
         <NotificationsContext.Provider value={{ state, setState }}>
           <StatusBar barStyle="light-content" />
           {screen === 'notifications' ? (
-            <NotificationListScreen onOpenSettings={() => setScreen('settings')} />
+            <NotificationListScreen
+              onOpenSettings={() => setScreen('settings')}
+            />
+          ) : screen === 'settings' ? (
+            <SubscriptionSettingsScreen
+              onClose={() => setScreen('notifications')}
+              onOpenRepositories={() => setScreen('repositories')}
+            />
           ) : (
-            <SubscriptionSettingsScreen onClose={() => setScreen('notifications')} />
+            <RepositorySettingsScreen onClose={() => setScreen('settings')} />
           )}
         </NotificationsContext.Provider>
       </SafeAreaView>
