@@ -38,6 +38,14 @@ const MENTION_TARGET: RelayTarget = {
 
 const client = new AzureDevOpsClient({ orgUrl, token: getToken() });
 
+export type RelaySubscription = {
+  id: string;
+  label: string;
+  category: string;
+  enabled: boolean;
+  statusMessage?: string;
+};
+
 type RelayTarget = {
   /** Human label shown after the [ANH] marker; also the idempotency key. */
   label: string;
@@ -87,6 +95,67 @@ function relayLabelOf(sub: NotificationSubscription): string | undefined {
     return description.slice(MARKER.length).trim();
   }
   return undefined;
+}
+
+/** Azure returns enum values as either numbers or their string names. */
+function isSubscriptionEnabled(status: NotificationSubscription['status']): boolean {
+  if (typeof status === 'number') {
+    return status >= 0;
+  }
+
+  return status === undefined || String(status).toLowerCase().startsWith('enabled');
+}
+
+/** Map Azure DevOps event namespaces to the product areas users recognise. */
+function categoryForEventType(eventType?: string): string {
+  const normalized = eventType?.toLowerCase() ?? '';
+
+  if (normalized.includes('mentions')) return 'Mentions';
+  if (normalized.includes('vss-work.')) return 'Boards';
+  if (normalized.includes('vss-code.')) return 'Repos';
+  if (
+    normalized.includes('vss-build.') ||
+    normalized.includes('pipeline') ||
+    normalized.includes('release')
+  ) {
+    return 'Pipelines';
+  }
+  if (normalized.includes('testmanagement') || normalized.includes('vss-test.')) {
+    return 'Test Plans';
+  }
+  if (normalized.includes('wiki')) return 'Wiki';
+
+  return 'Other';
+}
+
+/** List only subscriptions owned by this app, suitable for display in Settings. */
+export async function getRelaySubscriptions(): Promise<RelaySubscription[]> {
+  const subscriptions = await client.listSubscriptions();
+
+  return subscriptions
+    .map<RelaySubscription | undefined>(subscription => {
+      const label = relayLabelOf(subscription);
+      if (!label || !subscription.id) return undefined;
+
+      return {
+        id: subscription.id,
+        label,
+        category: categoryForEventType(subscription.filter.eventType),
+        enabled: isSubscriptionEnabled(subscription.status),
+        statusMessage: subscription.statusMessage,
+      };
+    })
+    .filter((subscription): subscription is RelaySubscription => Boolean(subscription))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+/** Enable or disable an app-managed relay subscription. */
+export async function setRelaySubscriptionEnabled(
+  subscriptionId: string,
+  enabled: boolean,
+): Promise<void> {
+  // SubscriptionStatus.Enabled = 0; SubscriptionStatus.Disabled = -1.
+  await client.updateSubscription(subscriptionId, { status: enabled ? 0 : -1 });
 }
 
 function relayChannel(): EmailHtmlSubscriptionChannel {

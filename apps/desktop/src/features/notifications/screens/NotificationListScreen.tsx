@@ -1,20 +1,27 @@
 import React, { useContext, useMemo } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../theme/useAppTheme';
 import { EmptyNotificationsView } from '../components/EmptyNotificationsView';
 import { NotificationItemView } from '../components/NotificationItemView';
 import { NotificationsContext } from '../context/NotificationsContext';
 import { sortNotificationsByDateDesc } from '../utils/sortNotifications';
 import { AppText } from '../../../components/AppText';
+import type { NotificationState } from '../context/NotificationsContext';
 
-export const NotificationListScreen: React.FC = () => {
+const EMPTY_NOTIFICATION_STATE: NotificationState = {
+  list: [],
+  notifications: {},
+};
+
+type Props = {
+  onOpenSettings: () => void;
+};
+
+export const NotificationListScreen: React.FC<Props> = ({ onOpenSettings }) => {
   const theme = useAppTheme();
   const constexState = useContext(NotificationsContext);
 
-  const notificationState = constexState?.state ?? {
-    list: [],
-    notifications: {},
-  };
+  const notificationState = constexState?.state ?? EMPTY_NOTIFICATION_STATE;
 
   const sortedNotifications = useMemo(
     () => sortNotificationsByDateDesc(notificationState),
@@ -23,17 +30,27 @@ export const NotificationListScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <AppText
-        variant="headline"
-        style={[
-          styles.title,
-          {
-            color: theme.textPrimary,
-          },
-        ]}
-      >
-        All Notifications
-      </AppText>
+      <View style={styles.header}>
+        <AppText
+          variant="headline"
+          style={[styles.title, { color: theme.textPrimary }]}
+        >
+          All Notifications
+        </AppText>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Open settings"
+          onPress={onOpenSettings}
+          style={({ pressed }) => [
+            styles.settingsButton,
+            { opacity: pressed ? 0.6 : 1 },
+          ]}
+        >
+          <AppText variant="body" style={{ color: theme.accent }}>
+            Settings
+          </AppText>
+        </Pressable>
+      </View>
       <FlatList
         data={sortedNotifications}
         keyExtractor={item => item}
@@ -58,10 +75,17 @@ const styles = StyleSheet.create({
   emptyContent: {
     flexGrow: 1,
   },
-    title: {
-    flex: 1,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
-    marginBottom: 16
+    marginBottom: 16,
   },
-
+  title: {
+    flex: 1,
+  },
+  settingsButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
 });

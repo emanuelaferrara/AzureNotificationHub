@@ -17,6 +17,7 @@ import {
   type NotificationResponse,
 } from 'react-native-mac-notifications';
 import type { Notification as AppNotification } from './features/notifications/types/Notification';
+import { SubscriptionSettingsScreen } from './features/settings/screens/SubscriptionSettingsScreen';
 
 // Shape of a notification pushed by the backend over the WebSocket. Mirrors the
 // backend's NotificationPayload (only the fields this demo touches are typed).
@@ -30,6 +31,7 @@ type IncomingNotification = {
 };
 
 export default function App() {
+  const [screen, setScreen] = useState<'notifications' | 'settings'>('notifications');
   const [state, setState] = useState<NotificationState>({
     notifications: {},
     list: [],
@@ -166,7 +168,11 @@ export default function App() {
       <SafeAreaView style={{ flex: 1 }}>
         <NotificationsContext.Provider value={{ state, setState }}>
           <StatusBar barStyle="light-content" />
-          <NotificationListScreen />
+          {screen === 'notifications' ? (
+            <NotificationListScreen onOpenSettings={() => setScreen('settings')} />
+          ) : (
+            <SubscriptionSettingsScreen onClose={() => setScreen('notifications')} />
+          )}
         </NotificationsContext.Provider>
       </SafeAreaView>
     </SafeAreaProvider>

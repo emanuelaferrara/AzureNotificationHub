@@ -17,8 +17,6 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
 
   const cardBackgroundColor = notification.read ? theme.card : theme.cardUnread;
 
-  const titleColor = notification.read ? theme.textPrimary : theme.accent;
-
   const handlePress = () => {
     if (!hasUrl) return;
     Linking.openURL(notification.url!).catch(error => {
@@ -92,7 +90,7 @@ export const NotificationItemView: React.FC<NotificationItemViewProps> = ({
             </AppText>
         </View>
       </Pressable>
-      <Divider></Divider>
+      <Divider />
     </View>
   );
 };

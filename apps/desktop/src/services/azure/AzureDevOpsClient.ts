@@ -2,6 +2,7 @@ import type {
   NotificationSubscription,
   NotificationSubscriptionCreateParameters,
   NotificationSubscriptionTemplate,
+  NotificationSubscriptionUpdateParameters,
 } from 'azure-devops-node-api/interfaces/NotificationInterfaces';
 
 export type AzureDevOpsClientOptions = {
@@ -77,6 +78,32 @@ export class AzureDevOpsClient {
     return (await res.json()) as TResponse;
   }
 
+  /** PATCH a JSON body to an Azure DevOps REST resource. */
+  private async patchJson<TResponse>(
+    path: string,
+    apiVersion: string,
+    body: unknown,
+  ): Promise<TResponse> {
+    const sep = path.includes('?') ? '&' : '?';
+    const url = `${this.baseUrl}${path}${sep}api-version=${apiVersion}`;
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        Authorization: this.authHeader,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      throw new Error(
+        `Azure DevOps ${res.status} ${res.statusText} for ${path}: ${errBody.slice(0, 200)}`,
+      );
+    }
+    return (await res.json()) as TResponse;
+  }
+
   /** List the notification subscriptions visible to the token's user. */
   async listSubscriptions(): Promise<NotificationSubscription[]> {
     const { value } = await this.getJson<AzureList<NotificationSubscription>>(
@@ -100,6 +127,18 @@ export class AzureDevOpsClient {
   ): Promise<NotificationSubscription> {
     return this.postJson<NotificationSubscription>(
       '_apis/notification/subscriptions',
+      '7.1-preview.1',
+      params,
+    );
+  }
+
+  /** Update fields on an existing notification subscription. */
+  async updateSubscription(
+    subscriptionId: string,
+    params: NotificationSubscriptionUpdateParameters,
+  ): Promise<NotificationSubscription> {
+    return this.patchJson<NotificationSubscription>(
+      `_apis/notification/subscriptions/${encodeURIComponent(subscriptionId)}`,
       '7.1-preview.1',
       params,
     );
